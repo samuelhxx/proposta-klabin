@@ -27,16 +27,10 @@
 }
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:auto; }
-body { background:var(--bg0); color:var(--txt); font-family:var(--fb); overflow-x:hidden; cursor:none; }
-body.touch { cursor:auto; }
+body { background:var(--bg0); color:var(--txt); font-family:var(--fb); overflow-x:hidden; }
 img { max-width:100%; display:block; }
 a { color:inherit; }
 
-/* ── CURSOR ── */
-#cur { position:fixed; top:0; left:0; z-index:9999; width:8px; height:8px; background:var(--pl); border-radius:50%; pointer-events:none; transform:translate(-50%,-50%); mix-blend-mode:screen; transition:width .15s,height .15s; }
-#fol { position:fixed; top:0; left:0; z-index:9998; width:36px; height:36px; border:1.5px solid rgba(177,74,224,.55); border-radius:50%; pointer-events:none; transform:translate(-50%,-50%); transition:width .25s,height .25s,border-color .25s; }
-#cur.hov { width:14px; height:14px; background:var(--p); }
-#fol.hov { width:50px; height:50px; border-color:var(--pl); }
 
 /* ── PROGRESS ── */
 #pb { position:fixed; top:0; left:0; z-index:9990; height:3px; width:0; background:linear-gradient(90deg,var(--p),var(--pl)); box-shadow:0 0 10px var(--pl); pointer-events:none; }
@@ -117,8 +111,7 @@ section { position:relative; overflow:hidden; }
 .card:hover { box-shadow:0 20px 60px rgba(115,1,140,.28); border-color:rgba(177,74,224,.45); }
 .spot { position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0; transition:opacity .3s; }
 .card:hover .spot { opacity:1; }
-.card-rec { border-color:rgba(177,74,224,.5); animation:glow-rec 2.5s ease-in-out infinite; }
-@keyframes glow-rec { 0%,100%{ box-shadow:0 0 20px rgba(177,74,224,.2); } 50%{ box-shadow:0 0 40px rgba(177,74,224,.5),inset 0 0 30px rgba(115,1,140,.08); } }
+.card-rec { border-color:rgba(177,74,224,.5); }
 .ctag { margin-bottom:22px; }
 .pill-a { background:rgba(177,74,224,.12); border:1px solid rgba(177,74,224,.35); color:var(--pl); }
 .pill-b { background:linear-gradient(135deg,rgba(115,1,140,.35),rgba(177,74,224,.25)); border:1px solid rgba(177,74,224,.55); color:#fff; box-shadow:0 0 16px rgba(177,74,224,.25); }
@@ -211,8 +204,6 @@ section { position:relative; overflow:hidden; }
 </head>
 <body>
 
-<div id="cur"></div>
-<div id="fol"></div>
 <div id="pb"></div>
 
 <a href="https://wa.me/5511933680596" id="wa" target="_blank" rel="noopener" aria-label="WhatsApp">
@@ -223,7 +214,7 @@ section { position:relative; overflow:hidden; }
 <section id="hero">
   <div id="hp"></div>
   <div class="hc">
-    <img src="LOGO AS .png" id="hlogo" alt="AS Construction" onerror="this.style.display='none'">
+    <img src="logo.png" id="hlogo" alt="AS Construction" onerror="this.style.display='none'">
     <div id="htag">
       <svg width="7" height="7" viewBox="0 0 7 7"><circle cx="3.5" cy="3.5" r="3.5" fill="currentColor"/></svg>
       Proposta Exclusiva
@@ -551,15 +542,11 @@ section { position:relative; overflow:hidden; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
 <script>
 (function(){
   'use strict';
 
-  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  const isMobile = window.innerWidth < 768;
   const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (isTouch) document.body.classList.add('touch');
 
   /* ── LENIS ── */
   const lenis = new Lenis({ duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
@@ -567,26 +554,6 @@ section { position:relative; overflow:hidden; }
   gsap.ticker.add(t => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
 
-  /* ── CURSOR ── */
-  if (!isTouch) {
-    const cur = document.getElementById('cur');
-    const fol = document.getElementById('fol');
-    let mx = 0, my = 0, fx = 0, fy = 0;
-    document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      gsap.to(cur, { x: mx, y: my, duration: 0.08, overwrite: true });
-    });
-    (function loop() {
-      fx += (mx - fx) * 0.1;
-      fy += (my - fy) * 0.1;
-      gsap.set(fol, { x: fx, y: fy });
-      requestAnimationFrame(loop);
-    })();
-    document.querySelectorAll('a,button,.card,.tnode,.pm').forEach(el => {
-      el.addEventListener('mouseenter', () => { cur.classList.add('hov'); fol.classList.add('hov'); });
-      el.addEventListener('mouseleave', () => { cur.classList.remove('hov'); fol.classList.remove('hov'); });
-    });
-  }
 
   /* ── PROGRESS BAR ── */
   const pb = document.getElementById('pb');
@@ -681,11 +648,6 @@ section { position:relative; overflow:hidden; }
     });
   });
 
-  // Card B breathing (GSAP)
-  gsap.to('#cb', {
-    scale: 1.014, duration: 1.8, yoyo: true, repeat: -1, ease: 'sine.inOut',
-    transformOrigin: 'center center'
-  });
 
   function startMdo() {
     if (noMotion) { document.getElementById('mdo').textContent = '225.000'; return; }
@@ -696,32 +658,6 @@ section { position:relative; overflow:hidden; }
     });
   }
 
-  // 3D tilt + spotlight
-  if (!isTouch) {
-    ['ca','cb','cc'].forEach(id => {
-      const card = document.getElementById(id);
-      const sp = card.querySelector('.spot');
-      let breathing = id === 'cb' ? gsap.getTweensOf('#cb')[0] : null;
-      card.addEventListener('mousemove', e => {
-        const r = card.getBoundingClientRect();
-        const x = e.clientX - r.left, y = e.clientY - r.top;
-        const rx = (y - r.height/2) / 20;
-        const ry = (r.width/2 - x) / 20;
-        gsap.to(card, { rotateX: rx, rotateY: ry, duration: 0.3, ease: 'power1.out', transformPerspective: 1200, overwrite: 'auto' });
-        sp.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(177,74,224,.16) 0%, transparent 62%)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.7, ease: 'elastic.out(1,.55)', overwrite: 'auto' });
-        sp.style.background = 'none';
-      });
-      card.addEventListener('mouseenter', () => {
-        gsap.to(card, { translateY: -10, duration: 0.3, ease: 'power2.out', overwrite: false });
-      });
-      card.addEventListener('mouseleave', () => {
-        gsap.to(card, { translateY: 0, duration: 0.5, ease: 'power2.out', overwrite: false });
-      }, { capture: true });
-    });
-  }
 
   // Disclaimer
   ScrollTrigger.create({
@@ -746,7 +682,6 @@ section { position:relative; overflow:hidden; }
   });
 
   /* ── S6 AUTORIDADE ── */
-  let aFired = false;
   ScrollTrigger.create({
     trigger: '#aut', start: 'top 72%',
     onEnter: () => {
@@ -754,22 +689,28 @@ section { position:relative; overflow:hidden; }
       document.querySelectorAll('.af').forEach((el, i) => {
         gsap.to(el, { opacity: 1, x: 0, duration: 0.6, delay: i * 0.12, ease: 'power2.out' });
       });
-      if (!aFired && !noMotion) {
-        aFired = true;
-        gsap.to({ v: 0 }, {
-          v: 20, duration: 2, ease: 'power2.out',
-          onUpdate: function() { document.getElementById('canos').textContent = Math.round(this.targets()[0].v); }
-        });
-        gsap.to({ v: 0 }, {
-          v: 35, duration: 2.2, ease: 'power2.out', delay: 0.2,
-          onUpdate: function() { document.getElementById('cobras').textContent = Math.round(this.targets()[0].v); }
-        });
-      } else if (noMotion) {
-        document.getElementById('canos').textContent = '20';
-        document.getElementById('cobras').textContent = '35';
-      }
     }
   });
+
+  function animCount(elId, target, ms) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    if (noMotion || !('IntersectionObserver' in window)) { el.textContent = target; return; }
+    const obs = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      obs.disconnect();
+      const t0 = performance.now();
+      const fb = setTimeout(() => { el.textContent = target; }, ms + 500);
+      (function step(now) {
+        const p = Math.min((now - t0) / ms, 1);
+        el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target);
+        if (p < 1) requestAnimationFrame(step); else clearTimeout(fb);
+      })(t0);
+    }, { threshold: 0.3 });
+    obs.observe(document.getElementById('aut'));
+  }
+  animCount('canos', 20, 2000);
+  animCount('cobras', 35, 2200);
 
   /* ── S7 CTA ── */
   ScrollTrigger.create({
@@ -781,31 +722,6 @@ section { position:relative; overflow:hidden; }
     }
   });
 
-  /* ── TSPARTICLES ── */
-  const pcfg = (count) => ({
-    fullScreen: { enable: false },
-    background: { color: { value: 'transparent' } },
-    fpsLimit: 60,
-    particles: {
-      number: { value: count, density: { enable: true, area: 900 } },
-      color: { value: ['#73018C','#b14ae0','#d080ff'] },
-      links: { enable: true, distance: 130, color: '#b14ae0', opacity: 0.18, width: 1 },
-      move: { enable: true, speed: 0.7, direction: 'none', random: true, outModes: 'out' },
-      opacity: { value: { min: 0.1, max: 0.45 }, animation: { enable: true, speed: 0.8, minimumValue: 0.1 } },
-      size: { value: { min: 1, max: 2.5 } },
-      shape: { type: 'circle' }
-    },
-    interactivity: {
-      events: { onHover: { enable: !isTouch, mode: 'grab' } },
-      modes: { grab: { distance: 160, links: { opacity: 0.4 } } }
-    },
-    detectRetina: true
-  });
-
-  if (typeof tsParticles !== 'undefined') {
-    tsParticles.load('hp', pcfg(isMobile ? 35 : 70)).catch(()=>{});
-    tsParticles.load('cp2', pcfg(isMobile ? 45 : 95)).catch(()=>{});
-  }
 
 })();
 </script>
