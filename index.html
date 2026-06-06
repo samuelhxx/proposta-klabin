@@ -561,21 +561,36 @@ section{position:relative;overflow:hidden;}
 
 const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* LENIS */
+/* ── LENIS ── */
 const lenis = new Lenis({ duration:1.6, easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)) });
-lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add(t => lenis.raf(t*1000));
 gsap.ticker.lagSmoothing(0);
 
-/* PROGRESS */
-const pb = document.getElementById('pb');
-window.addEventListener('scroll', ()=>{
-  pb.style.width = (window.scrollY/(document.body.scrollHeight-innerHeight)*100)+'%';
-},{ passive:true });
-
 gsap.registerPlugin(ScrollTrigger);
 
-/* ── HERO ── */
+/* ── SCROLLTRIGGER ↔ LENIS PROXY ─────────────────────────────────────────
+   Sem o proxy, ScrollTrigger lê window.scrollY que no iOS é assíncrono:
+   Lenis chama window.scrollTo() mas window.scrollY não atualiza no mesmo
+   tick — ScrollTrigger recebe posição velha, onLeaveBack nunca dispara.
+   Com o proxy, GSAP lê lenis.scroll direto (sempre atual, mesmo tick).
+   ────────────────────────────────────────────────────────────────────── */
+ScrollTrigger.scrollerProxy(document.documentElement, {
+  scrollTop() { return lenis.scroll; },
+  getBoundingClientRect() {
+    return { top:0, left:0, width:innerWidth, height:innerHeight };
+  }
+});
+
+/* Progress bar + sync via evento Lenis — mais preciso que window.scroll */
+const pb = document.getElementById('pb');
+lenis.on('scroll', ({ progress }) => {
+  pb.style.width = (progress * 100) + '%';
+  ScrollTrigger.update();
+});
+
+ScrollTrigger.addEventListener('refresh', () => lenis.resize());
+
+/* ── HERO (entrada única, sem scroll-trigger) ── */
 if (!noMotion) {
   const htl = gsap.timeline({ delay:0.3 });
   htl
@@ -592,195 +607,157 @@ if (!noMotion) {
 
 /* HERO PARALLAX */
 gsap.to('.hero-inner', {
-  y:-50, opacity:0.55,
+  y:-60, opacity:0.5,
   scrollTrigger:{ trigger:'#hero', start:'top top', end:'bottom top', scrub:true }
 });
 
-/* WA */
+/* WA — toggle de classe, funciona corretamente com proxy ativo */
 ScrollTrigger.create({
   trigger:'#diag', start:'bottom 80%',
   onEnter:    ()=>document.getElementById('wa').classList.add('show'),
   onLeaveBack:()=>document.getElementById('wa').classList.remove('show')
 });
 
-/* ── CONTADOR REUTILIZÁVEL ── */
-function makeCounter(elId, target, ms, fmt){
-  const el = document.getElementById(elId);
-  if(!el) return { run:()=>{}, reset:()=>{} };
-  const format = fmt || (n => String(n));
-  let raf;
-  return {
-    run(){
-      cancelAnimationFrame(raf);
-      const t0 = performance.now();
-      const fb = setTimeout(()=>{ el.textContent=format(target); }, ms+500);
-      (function step(now){
-        const p = Math.min((now-t0)/ms, 1);
-        el.textContent = format(Math.round((1-Math.pow(1-p,3))*target));
-        if(p<1) raf=requestAnimationFrame(step); else clearTimeout(fb);
-      })(t0);
-    },
-    reset(){ cancelAnimationFrame(raf); el.textContent='0'; }
-  };
-}
-
-/* ── REVEAL BIDIRECIONAL — ScrollTrigger.create explícito ── */
-/* Usa onEnter/onLeaveBack com overwrite:true para garantir reverse com Lenis */
-function reveal(el, opts){
-  const o = opts||{};
-  if(!el) return;
-  if(noMotion){ el.style.opacity='1'; el.style.transform='none'; return; }
-  gsap.set(el, {opacity:0, y:12});
-  ScrollTrigger.create({
-    trigger:el, start:'top 90%',
-    onEnter:    ()=> gsap.to(el,{opacity:1,y:0, duration:o.dur||0.8, delay:o.delay||0, ease:'power1.out', overwrite:true}),
-    onLeaveBack:()=> gsap.to(el,{opacity:0,y:12,duration:0.4,                           ease:'power1.in',  overwrite:true})
+/* ── SCRUB REVEAL ──────────────────────────────────────────────────────────
+   scrub amarra a animação diretamente à posição de scroll — bidirecional
+   por natureza, sem callbacks, sem detecção de threshold.
+   Lê lenis.scroll via proxy: funciona em iOS, desktop e todos os browsers.
+   ────────────────────────────────────────────────────────────────────── */
+function reveal(el, start, end) {
+  if (!el) return;
+  if (noMotion) { el.style.opacity='1'; el.style.transform='none'; return; }
+  gsap.fromTo(el, { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:el, start:start||'top 92%', end:end||'top 60%', scrub:0.8 }
   });
 }
 
 /* ── S2 DIAGNÓSTICO ── */
-document.querySelectorAll('.diag-head>*').forEach((el,i)=>reveal(el,{delay:i*0.07}));
-document.querySelectorAll('.photo-item').forEach((el,i)=>reveal(el,{delay:i*0.1}));
+document.querySelectorAll('.diag-head>*').forEach(el => reveal(el));
+document.querySelectorAll('.photo-item').forEach(el => reveal(el));
 
 /* ── S3 CAUSA RAIZ ── */
 reveal(document.querySelector('.causa-sticky .lbl'));
-reveal(document.querySelector('.causa-sticky .h-lg'),{delay:0.06});
-reveal(document.querySelector('.causa-sticky .body-lg'),{delay:0.1});
-document.querySelectorAll('.layer').forEach((el,i)=>{
-  if(noMotion){el.style.opacity='1';el.style.transform='none';return;}
-  gsap.set(el,{opacity:0,x:-10});
-  ScrollTrigger.create({
-    trigger:'#causa', start:'top 72%',
-    onEnter:    ()=> gsap.to(el,{opacity:1,x:0,  duration:0.5,delay:i*0.1, ease:'power1.out', overwrite:true}),
-    onLeaveBack:()=> gsap.to(el,{opacity:0,x:-10,duration:0.3,              ease:'power1.in',  overwrite:true})
+reveal(document.querySelector('.causa-sticky .h-lg'));
+reveal(document.querySelector('.causa-sticky .body-lg'));
+document.querySelectorAll('.layer').forEach(el => {
+  if (noMotion){el.style.opacity='1';el.style.transform='none';return;}
+  gsap.fromTo(el, { opacity:0, x:-40 }, { opacity:1, x:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#causa', start:'top 78%', end:'top 45%', scrub:0.8 }
   });
 });
-document.querySelectorAll('.causa-item').forEach((el,i)=>{
-  if(noMotion){el.style.opacity='1';el.style.transform='none';return;}
-  gsap.set(el,{opacity:0,y:10});
-  ScrollTrigger.create({
-    trigger:el, start:'top 90%',
-    onEnter:    ()=> gsap.to(el,{opacity:1,y:0, duration:0.65,delay:i*0.08, ease:'power1.out', overwrite:true}),
-    onLeaveBack:()=> gsap.to(el,{opacity:0,y:10,duration:0.4,               ease:'power1.in',  overwrite:true})
-  });
-});
+document.querySelectorAll('.causa-item').forEach(el => reveal(el));
 
 /* ── S4 SOLUÇÕES ── */
-let mdoFired=false;
-['sol-a','sol-b'].forEach((id,i)=>{
-  const el=document.getElementById(id); if(!el) return;
-  if(noMotion){el.style.opacity='1';return;}
-  gsap.set(el,{opacity:0,y:14});
-  ScrollTrigger.create({
-    trigger:el, start:'top 90%',
-    onEnter:()=>{
-      gsap.to(el,{opacity:1,y:0,duration:0.75,delay:i*0.12,ease:'power1.out',overwrite:true,
-        onComplete:()=>{ if(id==='sol-b'&&!mdoFired){mdoFired=true;startMdo();} }
-      });
-    },
-    onLeaveBack:()=>{
-      gsap.to(el,{opacity:0,y:14,duration:0.4,ease:'power1.in',overwrite:true});
-      if(id==='sol-b'){ mdoFired=false; document.getElementById('mdo').textContent='0'; }
-    }
-  });
-});
-function startMdo(){
-  if(noMotion){document.getElementById('mdo').textContent='225.000';return;}
-  gsap.to({v:0},{v:225000,duration:2,ease:'power2.out',
-    onUpdate:function(){document.getElementById('mdo').textContent=Math.round(this.targets()[0].v).toLocaleString('pt-BR');},
-    onComplete:()=>{document.getElementById('mdo').textContent='225.000';}});
+reveal(document.getElementById('sol-a'));
+reveal(document.getElementById('sol-b'));
+if (!noMotion) {
+  /* mdo counter — conta proporcionalmente ao scroll, reverte ao subir */
+  const mdoEl = document.getElementById('mdo');
+  if (mdoEl) {
+    const p = { v:0 };
+    gsap.fromTo(p, { v:0 }, { v:225000, ease:'none',
+      onUpdate: () => { mdoEl.textContent = Math.round(p.v).toLocaleString('pt-BR'); },
+      scrollTrigger:{ trigger:'#sol-b', start:'top 70%', end:'top 15%', scrub:0.8 }
+    });
+  }
+} else {
+  const m=document.getElementById('mdo'); if(m) m.textContent='225.000';
 }
-reveal(document.getElementById('sol-disc'),{delay:0.1});
+reveal(document.getElementById('sol-disc'));
 
 /* ── RESTAURANTE ── */
 reveal(document.querySelector('#rest .rest-head .lbl'));
-reveal(document.querySelector('#rest .rest-head .h-lg'),{delay:0.06});
+reveal(document.querySelector('#rest .rest-head .h-lg'));
 reveal(document.querySelector('#rest .body-lg'));
-document.querySelectorAll('.rest-step').forEach((el,i)=>{
-  if(noMotion){el.style.opacity='1';el.style.transform='none';return;}
-  gsap.set(el,{opacity:0,y:8});
-  ScrollTrigger.create({
-    trigger:el, start:'top 90%',
-    onEnter:    ()=> gsap.to(el,{opacity:1,y:0,duration:0.55,delay:i*0.07,ease:'power1.out',overwrite:true}),
-    onLeaveBack:()=> gsap.to(el,{opacity:0,y:8, duration:0.35,             ease:'power1.in', overwrite:true})
-  });
-});
-reveal(document.getElementById('rest-price'),{delay:0.1});
-
-if(noMotion){
+document.querySelectorAll('.rest-step').forEach(el => reveal(el));
+reveal(document.getElementById('rest-price'));
+if (!noMotion) {
+  const ptBR = n => n.toLocaleString('pt-BR');
+  const rp = document.getElementById('rest-price');
+  const rmEl = document.getElementById('rest-mat');
+  const roEl = document.getElementById('rest-mo');
+  if (rp && rmEl) {
+    const pm = { v:0 };
+    gsap.fromTo(pm, { v:0 }, { v:31680, ease:'none',
+      onUpdate: () => { rmEl.textContent = ptBR(Math.round(pm.v)); },
+      scrollTrigger:{ trigger:rp, start:'top 70%', end:'top 20%', scrub:0.8 }
+    });
+  }
+  if (rp && roEl) {
+    const po = { v:0 };
+    gsap.fromTo(po, { v:0 }, { v:21000, ease:'none',
+      onUpdate: () => { roEl.textContent = ptBR(Math.round(po.v)); },
+      scrollTrigger:{ trigger:rp, start:'top 65%', end:'top 15%', scrub:0.8 }
+    });
+  }
+} else {
   const rm=document.getElementById('rest-mat'); if(rm) rm.textContent='31.680';
   const ro=document.getElementById('rest-mo');  if(ro) ro.textContent='21.000';
-} else {
-  const ptBR = n => n.toLocaleString('pt-BR');
-  const restMatCtr = makeCounter('rest-mat', 31680, 1800, ptBR);
-  const restMoCtr  = makeCounter('rest-mo',  21000, 1600, ptBR);
-  ScrollTrigger.create({
-    trigger:'#rest-price', start:'top 90%',
-    onEnter:    ()=>{ restMatCtr.run(); restMoCtr.run(); },
-    onLeaveBack:()=>{ restMatCtr.reset(); restMoCtr.reset(); }
-  });
 }
 
 /* ── S5 ESCOPO ── */
 reveal(document.querySelector('.esc-head .lbl'));
-reveal(document.querySelector('.esc-head .h-lg'),{delay:0.06});
-document.querySelectorAll('.step-row').forEach((el,i)=>{
-  if(noMotion){el.style.opacity='1';el.style.transform='none';return;}
-  gsap.set(el,{opacity:0,y:10});
-  ScrollTrigger.create({
-    trigger:el, start:'top 90%',
-    onEnter:    ()=> gsap.to(el,{opacity:1,y:0, duration:0.65,delay:i*0.07,ease:'power1.out',overwrite:true}),
-    onLeaveBack:()=> gsap.to(el,{opacity:0,y:10,duration:0.4,              ease:'power1.in', overwrite:true})
-  });
-});
+reveal(document.querySelector('.esc-head .h-lg'));
+document.querySelectorAll('.step-row').forEach(el => reveal(el));
 
 /* ── S6 AUTORIDADE ── */
 reveal(document.querySelector('.aut-layout .lbl'));
-reveal(document.getElementById('asub'),{delay:0.1});
-
-if(noMotion){
-  ['#n1','#n2'].forEach(s=>{const e=document.querySelector(s);if(e){e.style.opacity='1';e.style.transform='none';}});
+reveal(document.getElementById('asub'));
+if (noMotion) {
+  ['#n1','#n2'].forEach(s=>{ const e=document.querySelector(s); if(e){e.style.opacity='1';e.style.transform='none';} });
   document.querySelectorAll('.aut-point').forEach(el=>{el.style.opacity='1';el.style.transform='none';});
-  document.getElementById('canos').textContent='20';
-  document.getElementById('cobras').textContent='35';
+  document.getElementById('canos').textContent  = '20';
+  document.getElementById('cobras').textContent = '35';
 } else {
-  const canosCtr  = makeCounter('canos',  20, 2000);
-  const cobrasCtr = makeCounter('cobras', 35, 2200);
-  ScrollTrigger.create({
-    trigger:'#aut', start:'top 72%',
-    onEnter:()=>{
-      gsap.to(['#n1','#n2'],{opacity:1,y:0,duration:0.7,ease:'power1.out',stagger:0.14,overwrite:true});
-      document.querySelectorAll('.aut-point').forEach((el,i)=>{
-        gsap.to(el,{opacity:1,x:0,duration:0.6,delay:i*0.09,ease:'power1.out',overwrite:true});
-      });
-      canosCtr.run();
-      cobrasCtr.run();
-    },
-    onLeaveBack:()=>{
-      gsap.to(['#n1','#n2'],{opacity:0,y:16,duration:0.4,ease:'power1.in',overwrite:true});
-      document.querySelectorAll('.aut-point').forEach(el=>{
-        gsap.to(el,{opacity:0,x:14,duration:0.35,ease:'power1.in',overwrite:true});
-      });
-      canosCtr.reset();
-      cobrasCtr.reset();
-    }
+  gsap.fromTo('#n1', { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#aut', start:'top 80%', end:'top 52%', scrub:0.8 }
+  });
+  gsap.fromTo('#n2', { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#aut', start:'top 75%', end:'top 47%', scrub:0.8 }
+  });
+  /* contadores — contam com o scroll, revertem subindo */
+  const pcanos = { v:0 };
+  gsap.fromTo(pcanos, { v:0 }, { v:20, ease:'none',
+    onUpdate: () => { document.getElementById('canos').textContent = Math.round(pcanos.v); },
+    scrollTrigger:{ trigger:'#aut', start:'top 80%', end:'top 25%', scrub:0.8 }
+  });
+  const pcobras = { v:0 };
+  gsap.fromTo(pcobras, { v:0 }, { v:35, ease:'none',
+    onUpdate: () => { document.getElementById('cobras').textContent = Math.round(pcobras.v); },
+    scrollTrigger:{ trigger:'#aut', start:'top 75%', end:'top 20%', scrub:0.8 }
+  });
+  /* aut-points — slide da direita, escalonados */
+  document.querySelectorAll('.aut-point').forEach((el, i) => {
+    gsap.fromTo(el, { opacity:0, x:40 }, { opacity:1, x:0, ease:'power1.out',
+      scrollTrigger:{
+        trigger: '#aut',
+        start:  'top ' + (78 - i*6) + '%',
+        end:    'top ' + (48 - i*6) + '%',
+        scrub:  0.8
+      }
+    });
   });
 }
 
 /* ── S7 CTA ── */
-ScrollTrigger.create({
-  trigger:'#cta', start:'top 78%',
-  onEnter:()=>{
-    gsap.to('.cta-title',{opacity:1,y:0,duration:0.85,ease:'power1.out',overwrite:true});
-    gsap.to('.cta-sub',  {opacity:1,y:0,duration:0.7, delay:0.14,ease:'power1.out',overwrite:true});
-    gsap.to('.cta-btns', {opacity:1,y:0,duration:0.6, delay:0.26,ease:'power1.out',overwrite:true});
-  },
-  onLeaveBack:()=>{
-    gsap.to('.cta-title',{opacity:0,y:14,duration:0.4,ease:'power1.in',overwrite:true});
-    gsap.to('.cta-sub',  {opacity:0,y:10,duration:0.35,ease:'power1.in',overwrite:true});
-    gsap.to('.cta-btns', {opacity:0,y:10,duration:0.3, ease:'power1.in',overwrite:true});
-  }
-});
+if (!noMotion) {
+  gsap.fromTo('.cta-title', { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#cta', start:'top 90%', end:'top 58%', scrub:0.8 }
+  });
+  gsap.fromTo('.cta-sub', { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#cta', start:'top 85%', end:'top 53%', scrub:0.8 }
+  });
+  gsap.fromTo('.cta-btns', { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#cta', start:'top 80%', end:'top 48%', scrub:0.8 }
+  });
+} else {
+  ['.cta-title','.cta-sub','.cta-btns'].forEach(s=>{
+    const e=document.querySelector(s); if(e){e.style.opacity='1';e.style.transform='none';}
+  });
+}
+
+/* Refresh final — recalcula posições após tudo inicializado */
+ScrollTrigger.refresh();
 
 })();
 </script>
