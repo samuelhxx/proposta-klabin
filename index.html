@@ -63,6 +63,8 @@ section{position:relative;overflow:hidden;}
 #hero-tag{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--sub);margin-bottom:30px;opacity:0;}
 #hero-title{font-family:var(--fd);font-size:clamp(2.8rem,7vw,6rem);font-weight:800;line-height:1.04;letter-spacing:-.025em;text-transform:uppercase;margin-bottom:26px;opacity:0;transform:translateY(14px);}
 #hero-sub{font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--sub);margin-bottom:72px;opacity:0;}
+#hero-areas{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;margin-bottom:52px;opacity:0;}
+#hero-areas span{font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--sub);}
 #hero-scroll{display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;color:var(--dim);font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;}
 .scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,rgba(255,255,255,.4),transparent);animation:sc 2.4s ease-in-out infinite;}
 @keyframes sc{0%,100%{opacity:.3;transform:scaleY(1);}50%{opacity:.85;transform:scaleY(.5);}}
@@ -222,6 +224,11 @@ section{position:relative;overflow:hidden;}
     <p id="hero-tag">Proposta Exclusiva · Impermeabilização Industrial</p>
     <h1 id="hero-title">Impermeabilização<br>Industrial de<br>Alta Performance</h1>
     <p id="hero-sub">KLABIN PUMA · ORTIGUEIRA / PR · 3.000 M²</p>
+    <div id="hero-areas">
+      <span>MC 25 — 900 M²</span>
+      <span>MC 26 — 600 M²</span>
+      <span>Caldeira — 1.500 M²</span>
+    </div>
     <div id="hero-scroll">
       <div class="scroll-line"></div>
       <span>Rolar</span>
@@ -598,9 +605,10 @@ if (!noMotion) {
     .to('#hero-tag',   { opacity:1, duration:0.6, ease:'power1.out' }, '-=0.2')
     .to('#hero-title', { opacity:1, y:0, duration:1, ease:'power1.out' }, '-=0.1')
     .to('#hero-sub',   { opacity:1, duration:0.6, ease:'power1.out' }, '-=0.2')
+    .to('#hero-areas', { opacity:1, duration:0.5, ease:'power1.out' }, '-=0.1')
     .to('#hero-scroll',{ opacity:1, duration:0.5 }, '-=0.1');
 } else {
-  ['#hlogo','#hero-tag','#hero-title','#hero-sub','#hero-scroll'].forEach(s=>{
+  ['#hlogo','#hero-tag','#hero-title','#hero-sub','#hero-areas','#hero-scroll'].forEach(s=>{
     const el=document.querySelector(s); if(el){el.style.opacity='1';el.style.transform='none';}
   });
 }
