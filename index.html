@@ -626,8 +626,8 @@ ScrollTrigger.create({
 function reveal(el, start, end) {
   if (!el) return;
   if (noMotion) { el.style.opacity='1'; el.style.transform='none'; return; }
-  gsap.fromTo(el, { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
-    scrollTrigger:{ trigger:el, start:start||'top 92%', end:end||'top 60%', scrub:0.8 }
+  gsap.fromTo(el, { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:el, start:start||'top 88%', end:end||'top 45%', scrub:true }
   });
 }
 
@@ -641,8 +641,8 @@ reveal(document.querySelector('.causa-sticky .h-lg'));
 reveal(document.querySelector('.causa-sticky .body-lg'));
 document.querySelectorAll('.layer').forEach(el => {
   if (noMotion){el.style.opacity='1';el.style.transform='none';return;}
-  gsap.fromTo(el, { opacity:0, x:-40 }, { opacity:1, x:0, ease:'power1.out',
-    scrollTrigger:{ trigger:'#causa', start:'top 78%', end:'top 45%', scrub:0.8 }
+  gsap.fromTo(el, { opacity:0, x:-70 }, { opacity:1, x:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#causa', start:'top 85%', end:'top 48%', scrub:true }
   });
 });
 document.querySelectorAll('.causa-item').forEach(el => reveal(el));
@@ -657,7 +657,7 @@ if (!noMotion) {
     const p = { v:0 };
     gsap.fromTo(p, { v:0 }, { v:225000, ease:'none',
       onUpdate: () => { mdoEl.textContent = Math.round(p.v).toLocaleString('pt-BR'); },
-      scrollTrigger:{ trigger:'#sol-b', start:'top 70%', end:'top 15%', scrub:0.8 }
+      scrollTrigger:{ trigger:'#sol-b', start:'top 75%', end:'top 15%', scrub:true }
     });
   }
 } else {
@@ -680,14 +680,14 @@ if (!noMotion) {
     const pm = { v:0 };
     gsap.fromTo(pm, { v:0 }, { v:31680, ease:'none',
       onUpdate: () => { rmEl.textContent = ptBR(Math.round(pm.v)); },
-      scrollTrigger:{ trigger:rp, start:'top 70%', end:'top 20%', scrub:0.8 }
+      scrollTrigger:{ trigger:rp, start:'top 78%', end:'top 20%', scrub:true }
     });
   }
   if (rp && roEl) {
     const po = { v:0 };
     gsap.fromTo(po, { v:0 }, { v:21000, ease:'none',
       onUpdate: () => { roEl.textContent = ptBR(Math.round(po.v)); },
-      scrollTrigger:{ trigger:rp, start:'top 65%', end:'top 15%', scrub:0.8 }
+      scrollTrigger:{ trigger:rp, start:'top 73%', end:'top 15%', scrub:true }
     });
   }
 } else {
@@ -709,31 +709,31 @@ if (noMotion) {
   document.getElementById('canos').textContent  = '20';
   document.getElementById('cobras').textContent = '35';
 } else {
-  gsap.fromTo('#n1', { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
-    scrollTrigger:{ trigger:'#aut', start:'top 80%', end:'top 52%', scrub:0.8 }
+  gsap.fromTo('#n1', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#aut', start:'top 85%', end:'top 52%', scrub:true }
   });
-  gsap.fromTo('#n2', { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
-    scrollTrigger:{ trigger:'#aut', start:'top 75%', end:'top 47%', scrub:0.8 }
+  gsap.fromTo('#n2', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#aut', start:'top 80%', end:'top 47%', scrub:true }
   });
   /* contadores — contam com o scroll, revertem subindo */
   const pcanos = { v:0 };
   gsap.fromTo(pcanos, { v:0 }, { v:20, ease:'none',
     onUpdate: () => { document.getElementById('canos').textContent = Math.round(pcanos.v); },
-    scrollTrigger:{ trigger:'#aut', start:'top 80%', end:'top 25%', scrub:0.8 }
+    scrollTrigger:{ trigger:'#aut', start:'top 85%', end:'top 20%', scrub:true }
   });
   const pcobras = { v:0 };
   gsap.fromTo(pcobras, { v:0 }, { v:35, ease:'none',
     onUpdate: () => { document.getElementById('cobras').textContent = Math.round(pcobras.v); },
-    scrollTrigger:{ trigger:'#aut', start:'top 75%', end:'top 20%', scrub:0.8 }
+    scrollTrigger:{ trigger:'#aut', start:'top 80%', end:'top 15%', scrub:true }
   });
   /* aut-points — slide da direita, escalonados */
   document.querySelectorAll('.aut-point').forEach((el, i) => {
-    gsap.fromTo(el, { opacity:0, x:40 }, { opacity:1, x:0, ease:'power1.out',
+    gsap.fromTo(el, { opacity:0, x:70 }, { opacity:1, x:0, ease:'power1.out',
       scrollTrigger:{
         trigger: '#aut',
-        start:  'top ' + (78 - i*6) + '%',
-        end:    'top ' + (48 - i*6) + '%',
-        scrub:  0.8
+        start:  'top ' + (85 - i*5) + '%',
+        end:    'top ' + (50 - i*5) + '%',
+        scrub:  true
       }
     });
   });
@@ -741,14 +741,14 @@ if (noMotion) {
 
 /* ── S7 CTA ── */
 if (!noMotion) {
-  gsap.fromTo('.cta-title', { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
-    scrollTrigger:{ trigger:'#cta', start:'top 90%', end:'top 58%', scrub:0.8 }
+  gsap.fromTo('.cta-title', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#cta', start:'top 90%', end:'top 50%', scrub:true }
   });
-  gsap.fromTo('.cta-sub', { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
-    scrollTrigger:{ trigger:'#cta', start:'top 85%', end:'top 53%', scrub:0.8 }
+  gsap.fromTo('.cta-sub', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#cta', start:'top 85%', end:'top 46%', scrub:true }
   });
-  gsap.fromTo('.cta-btns', { opacity:0, y:40 }, { opacity:1, y:0, ease:'power1.out',
-    scrollTrigger:{ trigger:'#cta', start:'top 80%', end:'top 48%', scrub:0.8 }
+  gsap.fromTo('.cta-btns', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#cta', start:'top 80%', end:'top 42%', scrub:true }
   });
 } else {
   ['.cta-title','.cta-sub','.cta-btns'].forEach(s=>{
