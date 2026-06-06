@@ -430,12 +430,12 @@ section{position:relative;overflow:hidden;}
       <div class="rest-price-box" id="rest-price">
         <div class="sol-price-row">
           <p class="sol-price-lbl">Material (fornecido pela Klabin)</p>
-          <p class="sol-price-val">R$ 31.680</p>
+          <p class="sol-price-val">R$&nbsp;<span id="rest-mat">0</span></p>
           <p class="sol-price-note">Faturado diretamente pela Klabin ao fabricante</p>
         </div>
         <div class="sol-price-row">
           <p class="sol-price-lbl">Mão de obra — AS Construction</p>
-          <p class="sol-price-val">R$ 21.000</p>
+          <p class="sol-price-val">R$&nbsp;<span id="rest-mo">0</span></p>
           <p class="sol-price-note">Faturado pela AS Construction</p>
         </div>
         <div class="rest-disc">
@@ -665,6 +665,20 @@ document.querySelectorAll('.rest-step').forEach((el,i)=>{
 });
 reveal(document.getElementById('rest-price'),{delay:0.1});
 
+if(noMotion){
+  const rm=document.getElementById('rest-mat'); if(rm) rm.textContent='31.680';
+  const ro=document.getElementById('rest-mo');  if(ro) ro.textContent='21.000';
+} else {
+  const ptBR = n => n.toLocaleString('pt-BR');
+  const restMatCtr = makeCounter('rest-mat', 31680, 1800, ptBR);
+  const restMoCtr  = makeCounter('rest-mo',  21000, 1600, ptBR);
+  ScrollTrigger.create({
+    trigger:'#rest-price', start:'top 90%',
+    onEnter:    ()=>{ restMatCtr.run(); restMoCtr.run(); },
+    onLeaveBack:()=>{ restMatCtr.reset(); restMoCtr.reset(); }
+  });
+}
+
 /* S5 */
 reveal(document.querySelector('.esc-head .lbl'));
 reveal(document.querySelector('.esc-head .h-lg'),{delay:0.06});
@@ -680,18 +694,19 @@ reveal(document.querySelector('.aut-layout .lbl'));
 reveal(document.getElementById('asub'),{delay:0.1});
 
 /* Contador reutilizável: run() inicia, reset() volta a zero */
-function makeCounter(elId, target, ms){
+function makeCounter(elId, target, ms, fmt){
   const el = document.getElementById(elId);
   if(!el) return { run:()=>{}, reset:()=>{} };
+  const format = fmt || (n => String(n));
   let raf;
   return {
     run(){
       cancelAnimationFrame(raf);
       const t0 = performance.now();
-      const fb = setTimeout(()=>{ el.textContent=target; }, ms+500);
+      const fb = setTimeout(()=>{ el.textContent=format(target); }, ms+500);
       (function step(now){
         const p = Math.min((now-t0)/ms, 1);
-        el.textContent = Math.round((1-Math.pow(1-p,3))*target);
+        el.textContent = format(Math.round((1-Math.pow(1-p,3))*target));
         if(p<1) raf=requestAnimationFrame(step); else clearTimeout(fb);
       })(t0);
     },
