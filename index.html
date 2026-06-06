@@ -59,7 +59,7 @@ section{position:relative;overflow:hidden;}
 /* ── S1 HERO ── */
 #hero{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 80% 55% at 50% 0%,#1c003a 0%,var(--bg) 72%);}
 .hero-inner{padding:120px 40px 80px;max-width:880px;text-align:center;}
-#hlogo{width:52px;height:52px;object-fit:contain;margin:0 auto 40px;filter:brightness(1.1);opacity:0;}
+#hlogo{width:110px;height:auto;object-fit:contain;margin:0 auto 44px;filter:brightness(1.1);opacity:0;}
 #hero-tag{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--sub);margin-bottom:30px;opacity:0;}
 #hero-title{font-family:var(--fd);font-size:clamp(2.8rem,7vw,6rem);font-weight:800;line-height:1.04;letter-spacing:-.025em;text-transform:uppercase;margin-bottom:26px;opacity:0;transform:translateY(14px);}
 #hero-sub{font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--sub);margin-bottom:72px;opacity:0;}
@@ -75,15 +75,15 @@ section{position:relative;overflow:hidden;}
 .photo-item{position:relative;overflow:hidden;}
 .photo-item:nth-child(2){margin-top:44px;}
 .photo-item:nth-child(3){margin-top:22px;}
-.photo-box{aspect-ratio:4/3;background:linear-gradient(155deg,#0f0f1e 0%,#07071a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;animation:kb 20s ease-in-out infinite alternate;transform-origin:center;will-change:transform;}
+.photo-box{aspect-ratio:4/3;position:relative;overflow:hidden;}
+.photo-box::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.28);pointer-events:none;z-index:1;}
+.photo-img{width:100%;height:100%;object-fit:cover;display:block;animation:kb 20s ease-in-out infinite alternate;transform-origin:center;will-change:transform;}
 @keyframes kb{from{transform:scale(1);}to{transform:scale(1.04);}}
-.photo-lbl{font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.18);z-index:2;}
-.photo-icon{width:34px;height:34px;opacity:.1;stroke:rgba(255,255,255,.7);fill:none;stroke-width:1;z-index:2;}
 .photo-hotspot{position:absolute;z-index:3;cursor:default;}
-.ph-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.25);}
-.ph-tip{position:absolute;left:16px;top:-11px;white-space:nowrap;background:rgba(4,4,12,.95);border:1px solid var(--linem);border-radius:2px;padding:6px 11px;font-size:11px;color:rgba(255,255,255,.75);opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;pointer-events:none;}
+.ph-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.3);}
+.ph-tip{position:absolute;left:16px;top:-11px;white-space:nowrap;background:rgba(4,4,12,.95);border:1px solid var(--linem);border-radius:2px;padding:6px 11px;font-size:11px;color:rgba(255,255,255,.8);opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;pointer-events:none;}
 .photo-hotspot:hover .ph-tip{opacity:1;transform:translateX(0);}
-.photo-caption{padding:11px 14px;font-size:10px;letter-spacing:.05em;color:rgba(255,255,255,.22);border-top:1px solid var(--line);}
+.photo-caption{padding:11px 14px;font-size:10px;letter-spacing:.05em;color:rgba(255,255,255,.25);border-top:1px solid var(--line);}
 
 /* ── S3 CAUSA RAIZ ── */
 #causa{padding:130px 0;background:var(--bg1);}
@@ -106,8 +106,8 @@ section{position:relative;overflow:hidden;}
 #sol{padding:130px 0;background:var(--bg);}
 .sol-head{text-align:center;max-width:580px;margin:0 auto 80px;}
 .sol-head .h-lg{margin-bottom:14px;}
-.sol-grid{display:grid;grid-template-columns:repeat(3,1fr);}
-.sol-col{padding:0 36px 52px;border-right:1px solid var(--line);position:relative;}
+.sol-grid{display:grid;grid-template-columns:repeat(2,1fr);max-width:840px;margin:0 auto;}
+.sol-col{padding:0 44px 52px;border-right:1px solid var(--line);position:relative;}
 .sol-col:first-child{padding-left:0;}
 .sol-col:last-child{border-right:none;padding-right:0;}
 .sol-col-rec::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--accl);}
@@ -128,11 +128,25 @@ section{position:relative;overflow:hidden;}
 .sol-price-val{font-family:var(--fd);font-size:1.3rem;font-weight:700;color:var(--fg);}
 .sol-price-val.muted{font-size:1rem;color:var(--sub);}
 .sol-price-note{font-size:10px;color:var(--dim);margin-top:2px;}
-.sol-disc{margin-top:64px;padding:26px 32px;border:1px solid var(--line);font-size:.875rem;color:var(--sub);text-align:center;line-height:1.8;opacity:0;transform:translateY(12px);}
+.sol-disc{margin-top:64px;padding:26px 32px;border:1px solid var(--line);font-size:.875rem;color:var(--sub);text-align:center;line-height:1.8;max-width:840px;margin-left:auto;margin-right:auto;opacity:0;transform:translateY(12px);}
 .sol-disc strong{color:var(--fg);}
 
+/* ── RESTAURANTE ── */
+#rest{padding:130px 0;background:var(--bg1);}
+.rest-head{margin-bottom:64px;}
+.rest-head .h-lg{margin-bottom:0;}
+.rest-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.rest-steps{display:flex;flex-direction:column;}
+.rest-step{padding:20px 0;border-top:1px solid var(--line);opacity:0;transform:translateY(8px);}
+.rest-step:last-child{border-bottom:1px solid var(--line);}
+.rest-step-title{font-family:var(--fd);font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--fg);margin-bottom:4px;}
+.rest-step-desc{font-size:.82rem;line-height:1.7;color:var(--sub);}
+.rest-price-box{border:1px solid var(--linem);padding:30px 32px;opacity:0;transform:translateY(12px);}
+.rest-price-box .rest-disc{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);font-size:.78rem;color:var(--dim);line-height:1.75;}
+.rest-price-box .rest-disc strong{color:var(--sub);}
+
 /* ── S5 ESCOPO ── */
-#esc{padding:130px 0;background:var(--bg1);}
+#esc{padding:130px 0;background:var(--bg);}
 .esc-head{margin-bottom:72px;}
 .esc-head .h-lg{margin-bottom:0;}
 .steps-list{display:flex;flex-direction:column;}
@@ -143,7 +157,7 @@ section{position:relative;overflow:hidden;}
 .step-desc{font-size:.85rem;line-height:1.7;color:var(--sub);}
 
 /* ── S6 AUTORIDADE ── */
-#aut{padding:130px 0;background:var(--bg);}
+#aut{padding:130px 0;background:var(--bg1);}
 .aut-layout{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:start;}
 .aut-nums{display:flex;gap:56px;margin-bottom:44px;}
 .aut-num-item{opacity:0;transform:translateY(16px);}
@@ -171,17 +185,18 @@ section{position:relative;overflow:hidden;}
 @media(max-width:1024px){
   .causa-layout{grid-template-columns:1fr;gap:44px;}
   .causa-sticky{position:relative;top:auto;}
-  .sol-grid{grid-template-columns:1fr;}
-  .sol-col{border-right:none;border-bottom:1px solid var(--line);padding:36px 0;}
-  .sol-col:first-child{padding-top:0;}
-  .sol-col:last-child{border-bottom:none;padding-bottom:0;}
-  .sol-col-rec::before{width:72px;}
+  .rest-layout{grid-template-columns:1fr;gap:44px;}
   .aut-layout{grid-template-columns:1fr;gap:56px;}
 }
 @media(max-width:768px){
   .wrap{padding:0 24px;}
   .photos-grid{grid-template-columns:1fr;gap:2px;}
   .photo-item:nth-child(2),.photo-item:nth-child(3){margin-top:0;}
+  .sol-grid{grid-template-columns:1fr;max-width:100%;}
+  .sol-col{border-right:none;border-bottom:1px solid var(--line);padding:36px 0;}
+  .sol-col:first-child{padding-top:0;}
+  .sol-col:last-child{border-bottom:none;padding-bottom:0;}
+  .sol-col-rec::before{width:60px;}
   .aut-nums{gap:32px;}
   .aut-num-val{font-size:clamp(3.5rem,14vw,5rem);}
   .step-row{grid-template-columns:44px 1fr;gap:20px;}
@@ -225,8 +240,7 @@ section{position:relative;overflow:hidden;}
     <div class="photos-grid">
       <div class="photo-item">
         <div class="photo-box">
-          <svg class="photo-icon" viewBox="0 0 48 48" stroke-width="1"><rect x="6" y="10" width="36" height="28" rx="3"/><circle cx="24" cy="22" r="6"/><path d="M6 34l8-8 6 6 8-10 14 12"/></svg>
-          <span class="photo-lbl">Foto · Laje 01</span>
+          <img src="1.jpeg" alt="Vista geral — Cobertura Nave Principal" loading="lazy" class="photo-img">
           <div class="photo-hotspot" style="top:38%;left:32%">
             <div class="ph-dot"></div><div class="ph-tip">Eflorescência — infiltração ativa</div>
           </div>
@@ -235,8 +249,7 @@ section{position:relative;overflow:hidden;}
       </div>
       <div class="photo-item">
         <div class="photo-box">
-          <svg class="photo-icon" viewBox="0 0 48 48" stroke-width="1"><rect x="6" y="10" width="36" height="28" rx="3"/><circle cx="24" cy="22" r="6"/><path d="M6 34l8-8 6 6 8-10 14 12"/></svg>
-          <span class="photo-lbl">Foto · Laje 02</span>
+          <img src="2.jpeg" alt="Detalhe — Trincas e juntas comprometidas" loading="lazy" class="photo-img">
           <div class="photo-hotspot" style="top:48%;left:58%">
             <div class="ph-dot"></div><div class="ph-tip">Trinca estrutural — reforço necessário</div>
           </div>
@@ -245,8 +258,7 @@ section{position:relative;overflow:hidden;}
       </div>
       <div class="photo-item">
         <div class="photo-box">
-          <svg class="photo-icon" viewBox="0 0 48 48" stroke-width="1"><rect x="6" y="10" width="36" height="28" rx="3"/><circle cx="24" cy="22" r="6"/><path d="M6 34l8-8 6 6 8-10 14 12"/></svg>
-          <span class="photo-lbl">Foto · Laje 03</span>
+          <img src="3.jpeg" alt="Drenagem — Pontos de acúmulo identificados" loading="lazy" class="photo-img">
           <div class="photo-hotspot" style="top:62%;left:42%">
             <div class="ph-dot"></div><div class="ph-tip">Empoçamento — drenagem comprometida</div>
           </div>
@@ -302,13 +314,13 @@ section{position:relative;overflow:hidden;}
   <div class="wrap">
     <div class="sol-head">
       <p class="lbl">Análise Comparativa</p>
-      <h2 class="h-lg">Três caminhos.<br>Uma recomendação técnica.</h2>
+      <h2 class="h-lg">Dois caminhos.<br>Uma recomendação técnica.</h2>
       <p class="body-lg" style="margin-top:14px;">Comparamos as opções para o seu caso específico. Veja por quê a nossa escolha é a mais adequada à sua laje.</p>
     </div>
 
     <div class="sol-grid">
 
-      <!-- A -->
+      <!-- A — PVC -->
       <div class="sol-col" id="sol-a">
         <span class="sol-badge">Alta Durabilidade</span>
         <p class="sol-name">Manta PVC Soldável</p>
@@ -339,7 +351,7 @@ section{position:relative;overflow:hidden;}
         </div>
       </div>
 
-      <!-- B — RECOMENDADO -->
+      <!-- B — URETANO RECOMENDADO -->
       <div class="sol-col sol-col-rec" id="sol-b">
         <span class="sol-rec-badge">Recomendado AS Construction</span>
         <p class="sol-name">Poliuretano Alifático</p>
@@ -348,6 +360,7 @@ section{position:relative;overflow:hidden;}
         <ul class="sol-list">
           <li>Aderido ao concreto — sem bolsões ou flutuação</li>
           <li>Monolítico, sem emendas ou pontos fracos</li>
+          <li>Aplicado em demãos — controle preciso de espessura</li>
           <li>UV-estável: não amarela, não degrada com sol</li>
           <li>Acompanha a dilatação sem desgrudar</li>
           <li>Acabamento antiderrapante integrado</li>
@@ -355,7 +368,7 @@ section{position:relative;overflow:hidden;}
         </ul>
         <p class="sol-section-lbl lbl-neg">Considerações</p>
         <ul class="sol-list">
-          <li>Maior investimento inicial que manta líquida</li>
+          <li>Maior investimento inicial que sistemas simples</li>
           <li>Requer superfície preparada corretamente</li>
         </ul>
         <div class="sol-price">
@@ -372,42 +385,63 @@ section{position:relative;overflow:hidden;}
         </div>
       </div>
 
-      <!-- C -->
-      <div class="sol-col" id="sol-c">
-        <span class="sol-badge">Menor Investimento</span>
-        <p class="sol-name">Manta Líquida</p>
-        <p class="sol-type">Sistema Econômico</p>
-        <p class="sol-section-lbl lbl-pos">Por que serve</p>
-        <ul class="sol-list">
-          <li>Aplicação simples e rápida</li>
-          <li>Menor custo inicial</li>
-          <li>Diversas formulações disponíveis</li>
-        </ul>
-        <p class="sol-section-lbl lbl-neg">Avaliar com cuidado</p>
-        <ul class="sol-list">
-          <li>Menor durabilidade sob alta dilatação térmica</li>
-          <li>Menos indicada para o nível de patologia identificado</li>
-          <li>Pode exigir reaplicação em prazo mais curto</li>
-        </ul>
-        <div class="sol-price">
-          <div class="sol-price-row">
-            <p class="sol-price-lbl">Material (fornecido pela Klabin)</p>
-            <p class="sol-price-val muted">A definir</p>
-            <p class="sol-price-note">Faturado diretamente pela Klabin ao fabricante</p>
-          </div>
-          <div class="sol-price-row">
-            <p class="sol-price-lbl">Mão de obra — AS Construction</p>
-            <p class="sol-price-val muted">A definir</p>
-            <p class="sol-price-note">Faturado pela AS Construction</p>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <div class="sol-disc" id="sol-disc">
       <strong>O material é fornecido e faturado diretamente pela Klabin junto ao fabricante.</strong><br>
       A AS Construction fatura exclusivamente a <strong>mão de obra especializada</strong> e a <strong>responsabilidade técnica da execução</strong>.
+    </div>
+  </div>
+</section>
+
+<!-- RESTAURANTE -->
+<section id="rest">
+  <div class="wrap">
+    <div class="rest-head">
+      <p class="lbl">Escopo Complementar</p>
+      <h2 class="h-lg">Área do Restaurante<br>— 300 m²</h2>
+    </div>
+    <div class="rest-layout">
+      <div>
+        <p class="body-lg" style="margin-bottom:36px;">Área distinta da laje principal, com menor exigência térmica e tráfego leve. A solução recomendada é impermeabilização com sistema de borracha líquida (Imperflex) — compatível com o substrato e indicada para este nível de solicitação.</p>
+        <div class="rest-steps">
+          <div class="rest-step">
+            <p class="rest-step-title">Preparo de Superfície</p>
+            <p class="rest-step-desc">Regularização, limpeza e correção do substrato.</p>
+          </div>
+          <div class="rest-step">
+            <p class="rest-step-title">Tratamento de Trincas</p>
+            <p class="rest-step-desc">Selagem com tela de reforço e argamassa polimérica.</p>
+          </div>
+          <div class="rest-step">
+            <p class="rest-step-title">Primer de Aderência</p>
+            <p class="rest-step-desc">Aplicação de primer específico ao sistema Imperflex.</p>
+          </div>
+          <div class="rest-step">
+            <p class="rest-step-title">Imperflex em Camadas</p>
+            <p class="rest-step-desc">Impermeabilizante de borracha líquida em múltiplas demãos.</p>
+          </div>
+          <div class="rest-step">
+            <p class="rest-step-title">Acabamento Alifático</p>
+            <p class="rest-step-desc">Proteção UV e acabamento final com selante alifático.</p>
+          </div>
+        </div>
+      </div>
+      <div class="rest-price-box" id="rest-price">
+        <div class="sol-price-row">
+          <p class="sol-price-lbl">Material (fornecido pela Klabin)</p>
+          <p class="sol-price-val">R$ 31.680</p>
+          <p class="sol-price-note">Faturado diretamente pela Klabin ao fabricante</p>
+        </div>
+        <div class="sol-price-row">
+          <p class="sol-price-lbl">Mão de obra — AS Construction</p>
+          <p class="sol-price-val">R$ 21.000</p>
+          <p class="sol-price-note">Faturado pela AS Construction</p>
+        </div>
+        <div class="rest-disc">
+          <strong>O material é fornecido e faturado diretamente pela Klabin junto ao fabricante.</strong> A AS Construction fatura exclusivamente a <strong>mão de obra especializada</strong> e a <strong>responsabilidade técnica da execução</strong>.
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -603,13 +637,13 @@ document.querySelectorAll('.causa-item').forEach((el,i)=>{
      scrollTrigger:{trigger:el,start:'top 90%',toggleActions:'play none none none'}});
 });
 
-/* S4 */
+/* S4 SOLUÇÕES */
 let mdoFired=false;
-['sol-a','sol-b','sol-c'].forEach((id,i)=>{
+['sol-a','sol-b'].forEach((id,i)=>{
   const el=document.getElementById(id); if(!el) return;
   if(noMotion){el.style.opacity='1';return;}
   gsap.fromTo(el,{opacity:0,y:14},
-    {opacity:1,y:0,duration:0.75,ease:'power1.out',delay:i*0.1,clearProps:'transform',
+    {opacity:1,y:0,duration:0.75,ease:'power1.out',delay:i*0.12,clearProps:'transform',
      onComplete:()=>{ if(id==='sol-b'&&!mdoFired){mdoFired=true;startMdo();} },
      scrollTrigger:{trigger:el,start:'top 90%',toggleActions:'play none none none'}});
 });
@@ -620,6 +654,18 @@ function startMdo(){
     onComplete:()=>{document.getElementById('mdo').textContent='225.000';}});
 }
 reveal(document.getElementById('sol-disc'),{delay:0.1});
+
+/* RESTAURANTE */
+reveal(document.querySelector('#rest .rest-head .lbl'));
+reveal(document.querySelector('#rest .rest-head .h-lg'),{delay:0.06});
+reveal(document.querySelector('#rest .body-lg'));
+document.querySelectorAll('.rest-step').forEach((el,i)=>{
+  if(noMotion){el.style.opacity='1';el.style.transform='none';return;}
+  gsap.fromTo(el,{opacity:0,y:8},
+    {opacity:1,y:0,duration:0.55,ease:'power1.out',delay:i*0.07,
+     scrollTrigger:{trigger:el,start:'top 90%',toggleActions:'play none none none'}});
+});
+reveal(document.getElementById('rest-price'),{delay:0.1});
 
 /* S5 */
 reveal(document.querySelector('.esc-head .lbl'));
