@@ -745,12 +745,12 @@ if (!noMotion) {
   const ptBR = n => Math.round(n).toLocaleString('pt-BR');
   lenis.on('scroll', function() {
     if (solA) {
-      if (pvcMatEl) pvcMatEl.textContent = ptBR(solProgress(solA, 0.88, 0.22) * 975000);
-      if (pvcMoEl)  pvcMoEl.textContent  = ptBR(solProgress(solA, 0.82, 0.16) * 375000);
+      if (pvcMatEl) pvcMatEl.textContent = ptBR(solProgress(solA, 0.90, 0.62) * 975000);
+      if (pvcMoEl)  pvcMoEl.textContent  = ptBR(solProgress(solA, 0.84, 0.56) * 375000);
     }
     if (solB) {
-      if (urtMatEl) urtMatEl.textContent = ptBR(solProgress(solB, 0.88, 0.22) * 465300);
-      if (mdoEl)    mdoEl.textContent    = ptBR(solProgress(solB, 0.82, 0.16) * 225000);
+      if (urtMatEl) urtMatEl.textContent = ptBR(solProgress(solB, 0.90, 0.62) * 465300);
+      if (mdoEl)    mdoEl.textContent    = ptBR(solProgress(solB, 0.84, 0.56) * 225000);
     }
   });
 }
