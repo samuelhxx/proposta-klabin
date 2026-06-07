@@ -757,19 +757,32 @@ document.querySelectorAll('.causa-item').forEach(el => reveal(el));
 
 /* ── HELPERS ── */
 const ptBR = n => Math.round(n).toLocaleString('pt-BR');
-function startCounter(el, target, fmt) {
-  fmt = fmt || ptBR;
-  if (!el._cp) el._cp = { v: 0 };
-  gsap.killTweensOf(el._cp);
-  el._cp.v = 0;
-  gsap.to(el._cp, { v: target, duration: 0.8, ease: 'power2.out',
-    onUpdate:  () => { el.textContent = fmt(el._cp.v); },
-    onComplete:() => { el.textContent = fmt(target); }
-  });
-}
-function resetCounter(el) {
-  if (el && el._cp) gsap.killTweensOf(el._cp);
-  if (el) el.textContent = '0';
+
+/* ioCounter — IntersectionObserver, 800ms rAF, bidirecional */
+function ioCounter(triggerEl, els, targets, fmts) {
+  if (!triggerEl) return;
+  const rids = [];
+  function go() {
+    els.forEach((el, i) => {
+      if (!el) return;
+      cancelAnimationFrame(rids[i]);
+      const tgt = targets[i], fmt = (fmts && fmts[i]) || ptBR, t0 = performance.now();
+      function step(now) {
+        const p = Math.min((now - t0) / 800, 1);
+        el.textContent = fmt((1 - Math.pow(1 - p, 2)) * tgt);
+        if (p < 1) rids[i] = requestAnimationFrame(step);
+        else el.textContent = fmt(tgt);
+      }
+      rids[i] = requestAnimationFrame(step);
+    });
+  }
+  function reset() {
+    els.forEach((el, i) => { cancelAnimationFrame(rids[i]); if (el) el.textContent = '0'; });
+  }
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) go();
+    else if (e.boundingClientRect.top > 0) reset();
+  }, { threshold: 0.2 }).observe(triggerEl);
 }
 
 /* ── S4 SOLUÇÕES ── */
@@ -785,14 +798,8 @@ if (!noMotion) {
   if (pvcMoEl)  pvcMoEl.textContent  = '0';
   if (urtMatEl) urtMatEl.textContent = '0';
   if (mdoEl)    mdoEl.textContent    = '0';
-  ScrollTrigger.create({ trigger:'#sol-a', start:'top 80%',
-    onEnter()    { startCounter(pvcMatEl, 975000); startCounter(pvcMoEl, 375000); },
-    onLeaveBack(){ resetCounter(pvcMatEl); resetCounter(pvcMoEl); }
-  });
-  ScrollTrigger.create({ trigger:'#sol-b', start:'top 80%',
-    onEnter()    { startCounter(urtMatEl, 465300); startCounter(mdoEl, 225000); },
-    onLeaveBack(){ resetCounter(urtMatEl); resetCounter(mdoEl); }
-  });
+  ioCounter(document.getElementById('sol-a'), [pvcMatEl, pvcMoEl], [975000, 375000]);
+  ioCounter(document.getElementById('sol-b'), [urtMatEl, mdoEl],   [465300, 225000]);
 }
 
 /* ── RESTAURANTE ── */
@@ -806,10 +813,7 @@ const roEl = document.getElementById('rest-mo');
 if (!noMotion) {
   if (rmEl) rmEl.textContent = '0';
   if (roEl) roEl.textContent = '0';
-  ScrollTrigger.create({ trigger:'#rest-price', start:'top 80%',
-    onEnter()    { startCounter(rmEl, 31680); startCounter(roEl, 21000); },
-    onLeaveBack(){ resetCounter(rmEl); resetCounter(roEl); }
-  });
+  ioCounter(document.getElementById('rest-price'), [rmEl, roEl], [31680, 21000]);
 } else {
   if (rmEl) rmEl.textContent = '31.680';
   if (roEl) roEl.textContent = '21.000';
@@ -835,16 +839,13 @@ if (noMotion) {
   gsap.fromTo('#n2', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
     scrollTrigger:{ trigger:'#aut', start:'top 80%', end:'top 47%', scrub:true }
   });
-  /* contadores — disparam ao entrar na tela, completam em 0.85s */
+  /* contadores — IntersectionObserver, bidirecional */
   const canosEl  = document.getElementById('canos');
   const cobrasEl = document.getElementById('cobras');
   if (canosEl)  canosEl.textContent  = '0';
   if (cobrasEl) cobrasEl.textContent = '0';
   const intFmt = n => String(Math.round(n));
-  ScrollTrigger.create({ trigger:'#aut', start:'top 80%',
-    onEnter()    { startCounter(canosEl, 20, intFmt); startCounter(cobrasEl, 35, intFmt); },
-    onLeaveBack(){ resetCounter(canosEl); resetCounter(cobrasEl); }
-  });
+  ioCounter(document.getElementById('aut'), [canosEl, cobrasEl], [20, 35], [intFmt, intFmt]);
   /* aut-points — slide da direita, escalonados */
   document.querySelectorAll('.aut-point').forEach((el, i) => {
     gsap.fromTo(el, { opacity:0, x:70 }, { opacity:1, x:0, ease:'power1.out',
