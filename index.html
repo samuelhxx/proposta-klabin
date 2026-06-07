@@ -208,55 +208,56 @@ section{position:relative;overflow:hidden;}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 
-/* ── FUNDO DINÂMICO ── */
+/* ── FUNDO DINÂMICO — scroll-driven via --gy ── */
 @keyframes bg-breathe{
-  0%,100%{opacity:.4; transform:scale(1);}
-  50%    {opacity:1;  transform:scale(1.25) translateY(-4%);}
+  0%,100%{opacity:.38;}
+  50%    {opacity:.75;}
 }
 @keyframes bg-breathe-b{
-  0%,100%{opacity:.42;transform:scale(1);}
-  50%    {opacity:1;  transform:scale(1.2) translateX(3%) translateY(-3%);}
+  0%,100%{opacity:.40;}
+  50%    {opacity:.80;}
 }
-@keyframes bg-drift{
-  0%   {opacity:.5; transform:translate(0,0) scale(1);}
-  34%  {opacity:1;  transform:translate(8%,-6%) scale(1.1);}
-  68%  {opacity:.6; transform:translate(-6%,8%) scale(.93);}
-  100% {opacity:.5; transform:translate(0,0) scale(1);}
+@keyframes bg-pulse{
+  0%,100%{opacity:.42;}
+  50%    {opacity:.72;}
 }
 
-/* Hero — pulso profundo e lento */
+/* Hero — escala fixa, só opacidade pulsa; translate é comandado pelo scroll */
 #hero::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 62% 55% at 50% 30%,rgba(138,30,200,.5) 0%,rgba(80,0,130,.15) 52%,transparent 78%);
+  content:'';position:absolute;inset:-25%;
+  background:radial-gradient(ellipse 62% 55% at 50% 42%,rgba(138,30,200,.55) 0%,rgba(80,0,130,.18) 52%,transparent 76%);
   pointer-events:none;
   animation:bg-breathe 14s ease-in-out infinite;
-  will-change:opacity,transform;
+  translate:0 calc(var(--gy,0) * -0.45vh);
+  will-change:translate,opacity;
 }
 
-/* CTA — pulso mais lento e deslocado */
+/* CTA — deriva diagonal conforme scroll */
 #cta::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 66% 62% at 50% 50%,rgba(138,30,200,.55) 0%,rgba(80,0,130,.18) 50%,transparent 78%);
+  content:'';position:absolute;inset:-25%;
+  background:radial-gradient(ellipse 66% 62% at 50% 52%,rgba(138,30,200,.60) 0%,rgba(80,0,130,.20) 50%,transparent 76%);
   pointer-events:none;
   animation:bg-breathe-b 17s ease-in-out infinite;
-  will-change:opacity,transform;
+  translate:calc(var(--gy,0) * 0.06vh) calc(var(--gy,0) * -0.30vh);
+  will-change:translate,opacity;
 }
 
-/* Seções de conteúdo — glow visível mas discreto */
+/* Seções de conteúdo — glow sutil com drift leve no scroll */
 #diag::before,#causa::before,#sol::before,#rest::before,#esc::before,#aut::before{
   content:'';
   position:absolute;
-  width:80%;height:80%;
-  background:radial-gradient(ellipse at center,rgba(115,1,140,.13) 0%,rgba(80,0,130,.04) 50%,transparent 72%);
+  width:90%;height:90%;
+  background:radial-gradient(ellipse at center,rgba(115,1,140,.16) 0%,rgba(80,0,130,.05) 50%,transparent 72%);
   pointer-events:none;
-  animation:bg-drift 22s ease-in-out infinite;
+  animation:bg-pulse 20s ease-in-out infinite;
+  translate:0 calc(var(--gy,0) * -0.10vh);
 }
 #diag::before {top:0%;   left:10%; animation-delay:0s;}
-#causa::before{top:15%;  left:48%; animation-delay:-8s;}
-#sol::before  {top:5%;   left:15%; animation-delay:-4s;}
-#rest::before {top:10%;  left:42%; animation-delay:-15s;}
+#causa::before{top:15%;  left:44%; animation-delay:-7s;}
+#sol::before  {top:5%;   left:12%; animation-delay:-3s;}
+#rest::before {top:10%;  left:40%; animation-delay:-13s;}
 #esc::before  {top:3%;   left:4%;  animation-delay:-2s;}
-#aut::before  {top:8%;   left:35%; animation-delay:-11s;}
+#aut::before  {top:8%;   left:32%; animation-delay:-10s;}
 </style>
 </head>
 <body>
@@ -643,6 +644,7 @@ const pb = document.getElementById('pb');
 lenis.on('scroll', ({ progress }) => {
   pb.style.width = (progress * 100) + '%';
   ScrollTrigger.update();
+  if (!noMotion) document.documentElement.style.setProperty('--gy', (progress * 100).toFixed(2));
 });
 
 ScrollTrigger.addEventListener('refresh', () => lenis.resize());
