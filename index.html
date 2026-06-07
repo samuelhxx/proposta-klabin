@@ -274,7 +274,7 @@ section{position:relative;overflow:hidden;}
 }
 
 /* Seções — blob 55%×55%, viaja por todo o espaço da seção */
-#diag::before,#causa::before,#sol::before,#rest::before,#esc::before,#aut::before{
+#diag::before,#causa::before,#sol::before,#rest::before,#esc::before,#aut::before,#srv::before,#sobre::before{
   content:'';
   position:absolute;
   width:55%;height:55%;
@@ -290,6 +290,41 @@ section{position:relative;overflow:hidden;}
 #rest::before {animation-delay:-14s;}
 #esc::before  {animation-delay: -2s;}
 #aut::before  {animation-delay:-10s;}
+#srv::before  {animation-delay: -6s;}
+#sobre::before{animation-delay:-18s;}
+
+/* ── O QUE FAZEMOS ── */
+#srv{padding:130px 0;background:var(--bg);}
+.srv-head{max-width:640px;margin-bottom:64px;}
+.srv-phrase{font-family:var(--fd);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;line-height:1.22;letter-spacing:-.015em;color:var(--fg);margin-bottom:56px;}
+.srv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;max-width:840px;margin-bottom:56px;border-top:1px solid var(--line);}
+.srv-item{padding:18px 0;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:12px;}
+.srv-item:nth-child(odd){padding-right:40px;border-right:1px solid var(--line);}
+.srv-item:nth-child(even){padding-left:40px;}
+.srv-dot{width:3px;height:3px;border-radius:50%;background:var(--acc);margin-top:9px;flex-shrink:0;}
+.srv-item-text{font-size:.875rem;line-height:1.65;color:var(--sub);}
+.srv-close{max-width:840px;padding:26px 32px;border:1px solid var(--line);font-size:.9rem;line-height:1.88;color:var(--sub);text-align:center;}
+
+/* ── SOBRE ── */
+#sobre{padding:130px 0;background:var(--bg1);}
+.sobre-head{max-width:640px;margin-bottom:64px;}
+.sobre-sub{font-size:1rem;line-height:1.78;color:var(--sub);margin-top:14px;}
+.sobre-nums{display:flex;gap:56px;margin-bottom:64px;}
+.sobre-num-item{opacity:0;transform:translateY(16px);}
+.sobre-num-val{font-family:var(--fd);font-size:clamp(3.5rem,5.5vw,5.5rem);font-weight:800;line-height:1;letter-spacing:-.04em;color:var(--fg);}
+.sobre-num-lbl{font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--sub);margin-top:8px;}
+.sobre-clients{display:grid;grid-template-columns:repeat(2,1fr);gap:48px;max-width:840px;}
+.sobre-client-cat{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accl);margin-bottom:18px;}
+.sobre-client-list{display:flex;flex-direction:column;gap:10px;}
+.sobre-client-item{font-size:.875rem;line-height:1.65;color:var(--sub);padding-left:16px;position:relative;}
+.sobre-client-item::before{content:'—';position:absolute;left:0;font-size:.65rem;color:var(--dim);}
+@media(max-width:768px){
+  .srv-grid{grid-template-columns:1fr;}
+  .srv-item:nth-child(odd){padding-right:0;border-right:none;}
+  .srv-item:nth-child(even){padding-left:0;}
+  .sobre-nums{gap:32px;}
+  .sobre-clients{grid-template-columns:1fr;gap:32px;}
+}
 </style>
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
@@ -630,6 +665,69 @@ section{position:relative;overflow:hidden;}
   </div>
 </section>
 
+<!-- O QUE FAZEMOS -->
+<section id="srv">
+  <div class="wrap">
+    <div class="srv-head">
+      <p class="lbl">Escopo Completo</p>
+      <h2 class="h-lg">O Que Fazemos</h2>
+    </div>
+    <p class="srv-phrase" id="srv-phrase">Manutenção civil industrial completa.<br>Um único fornecedor para toda a sua planta.</p>
+    <div class="srv-grid" id="srv-grid">
+      <div class="srv-item"><span class="srv-dot"></span><span class="srv-item-text">Revestimentos epóxi e uretano de alta performance</span></div>
+      <div class="srv-item"><span class="srv-dot"></span><span class="srv-item-text">Recuperação estrutural e tratamento de patologias</span></div>
+      <div class="srv-item"><span class="srv-dot"></span><span class="srv-item-text">Impermeabilização técnica</span></div>
+      <div class="srv-item"><span class="srv-dot"></span><span class="srv-item-text">Serralheria industrial</span></div>
+      <div class="srv-item"><span class="srv-dot"></span><span class="srv-item-text">Coberturas industriais</span></div>
+      <div class="srv-item"><span class="srv-dot"></span><span class="srv-item-text">Pintura industrial</span></div>
+      <div class="srv-item"><span class="srv-dot"></span><span class="srv-item-text">Pisos industriais (concreto armado, polido, autonivelante)</span></div>
+      <div class="srv-item"><span class="srv-dot"></span><span class="srv-item-text">Serviços civis gerais (alvenaria, gesso, hidráulica, elétrica de obra)</span></div>
+    </div>
+    <div class="srv-close" id="srv-close">Eliminamos a necessidade de múltiplos fornecedores. Você fala com um só responsável, recebe um único cronograma, e tem garantia técnica sobre todo o escopo.</div>
+  </div>
+</section>
+
+<!-- SOBRE A AS CONSTRUCTION -->
+<section id="sobre">
+  <div class="wrap">
+    <div class="sobre-head">
+      <p class="lbl">Quem Somos</p>
+      <h2 class="h-lg">Sobre a AS Construction</h2>
+      <p class="sobre-sub">Mais de 20 anos transformando estruturas industriais e empreendimentos de alto padrão.</p>
+    </div>
+    <div class="sobre-nums">
+      <div class="sobre-num-item" id="sn1">
+        <div class="sobre-num-val">+<span id="srv-anos">0</span></div>
+        <div class="sobre-num-lbl">Anos de Mercado</div>
+      </div>
+      <div class="sobre-num-item" id="sn2">
+        <div class="sobre-num-val">+<span id="srv-obras">0</span></div>
+        <div class="sobre-num-lbl">Obras Entregues</div>
+      </div>
+    </div>
+    <div class="sobre-clients">
+      <div class="sobre-client-group" id="sobre-cg1">
+        <p class="sobre-client-cat">Indústria e Empreendimentos</p>
+        <div class="sobre-client-list">
+          <span class="sobre-client-item">Complexo Atmosphera — Jundiaí</span>
+          <span class="sobre-client-item">AKROPLASTIC do Brasil</span>
+          <span class="sobre-client-item">BRZ Empreendimentos</span>
+          <span class="sobre-client-item">Fomeco</span>
+        </div>
+      </div>
+      <div class="sobre-client-group" id="sobre-cg2">
+        <p class="sobre-client-cat">Condomínios de Alto Padrão</p>
+        <div class="sobre-client-list">
+          <span class="sobre-client-item">Vilas do Golf</span>
+          <span class="sobre-client-item">Terras de São José</span>
+          <span class="sobre-client-item">Ibiaram</span>
+          <span class="sobre-client-item">Santa Mônica</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- S7 CTA -->
 <section id="cta">
   <div class="cta-inner">
@@ -847,6 +945,40 @@ if (noMotion) {
         scrub:  true
       }
     });
+  });
+}
+
+/* ── O QUE FAZEMOS ── */
+reveal(document.querySelector('#srv .lbl'));
+reveal(document.querySelector('#srv .h-lg'));
+reveal(document.getElementById('srv-phrase'));
+reveal(document.getElementById('srv-grid'));
+reveal(document.getElementById('srv-close'));
+
+/* ── SOBRE ── */
+reveal(document.querySelector('#sobre .lbl'));
+reveal(document.querySelector('#sobre .h-lg'));
+reveal(document.querySelector('#sobre .sobre-sub'));
+reveal(document.getElementById('sobre-cg1'));
+reveal(document.getElementById('sobre-cg2'));
+if (noMotion) {
+  ['#sn1','#sn2'].forEach(s=>{ const e=document.querySelector(s); if(e){e.style.opacity='1';e.style.transform='none';} });
+  document.getElementById('srv-anos').textContent  = '20';
+  document.getElementById('srv-obras').textContent = '35';
+} else {
+  gsap.fromTo('#sn1', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#sobre', start:'top 85%', end:'top 52%', scrub:true }
+  });
+  gsap.fromTo('#sn2', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
+    scrollTrigger:{ trigger:'#sobre', start:'top 80%', end:'top 47%', scrub:true }
+  });
+  const srvAnosEl  = document.getElementById('srv-anos');
+  const srvObrasEl = document.getElementById('srv-obras');
+  if (srvAnosEl)  srvAnosEl.textContent  = '0';
+  if (srvObrasEl) srvObrasEl.textContent = '0';
+  lenis.on('scroll', function() {
+    if (srvAnosEl)  srvAnosEl.textContent  = String(Math.round(sp(srvAnosEl,  0.95, 0.78) * 20));
+    if (srvObrasEl) srvObrasEl.textContent = String(Math.round(sp(srvObrasEl, 0.95, 0.78) * 35));
   });
 }
 
