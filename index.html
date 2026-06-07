@@ -172,16 +172,16 @@ section{position:relative;overflow:hidden;}
 .ap-body{font-size:.83rem;line-height:1.7;color:var(--sub);}
 
 /* ── S7 CTA ── */
-#cta{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse 65% 65% at 50% 50%,#1a0030 0%,var(--bg) 100%);text-align:center;padding:100px 40px 80px;}
+#cta{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse 65% 65% at 50% 50%,#1a0030 0%,var(--bg) 100%);text-align:center;padding:80px 40px 60px;}
 .cta-inner{max-width:680px;position:relative;z-index:2;}
-.cta-title{font-family:var(--fd);font-size:clamp(2.6rem,6vw,5rem);font-weight:800;line-height:1.04;letter-spacing:-.02em;text-transform:uppercase;margin-bottom:22px;opacity:0;transform:translateY(14px);}
-.cta-sub{font-size:1rem;color:var(--sub);margin-bottom:52px;opacity:0;transform:translateY(10px);}
+.cta-title{font-family:var(--fd);font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;line-height:1.04;letter-spacing:-.02em;text-transform:uppercase;margin-bottom:16px;opacity:0;transform:translateY(14px);}
+.cta-sub{font-size:1rem;color:var(--sub);margin-bottom:36px;opacity:0;transform:translateY(10px);}
 .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(10px);}
 .btn-p{display:inline-flex;align-items:center;gap:9px;padding:14px 36px;background:#fff;color:#000;font-family:var(--fd);font-weight:700;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid #fff;transition:background .22s,color .22s;}
 .btn-p:hover{background:transparent;color:#fff;}
 .btn-s{display:inline-flex;align-items:center;gap:9px;padding:14px 36px;background:transparent;color:#fff;font-family:var(--fd);font-weight:600;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid rgba(255,255,255,.25);transition:border-color .22s;}
 .btn-s:hover{border-color:rgba(255,255,255,.6);}
-.cta-foot{margin-top:72px;padding-top:28px;border-top:1px solid var(--line);font-size:.72rem;letter-spacing:.05em;color:var(--dim);line-height:2.2;}
+.cta-foot{margin-top:48px;padding-top:28px;border-top:1px solid var(--line);font-size:.72rem;letter-spacing:.05em;color:var(--dim);line-height:2.2;}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
@@ -347,12 +347,12 @@ section{position:relative;overflow:hidden;}
         <div class="sol-price">
           <div class="sol-price-row">
             <p class="sol-price-lbl">Material (fornecido pela Klabin)</p>
-            <p class="sol-price-val">R$ 975.000</p>
+            <p class="sol-price-val">R$&nbsp;<span id="pvc-mat">0</span></p>
             <p class="sol-price-note">Faturado diretamente pela Klabin ao fabricante</p>
           </div>
           <div class="sol-price-row">
             <p class="sol-price-lbl">Mão de obra — AS Construction</p>
-            <p class="sol-price-val">R$ 375.000</p>
+            <p class="sol-price-val">R$&nbsp;<span id="pvc-mo">0</span></p>
             <p class="sol-price-note">Faturado pela AS Construction</p>
           </div>
         </div>
@@ -381,7 +381,7 @@ section{position:relative;overflow:hidden;}
         <div class="sol-price">
           <div class="sol-price-row">
             <p class="sol-price-lbl">Material (fornecido pela Klabin)</p>
-            <p class="sol-price-val">R$ 465.300</p>
+            <p class="sol-price-val">R$&nbsp;<span id="urt-mat">0</span></p>
             <p class="sol-price-note">Faturado diretamente pela Klabin ao fabricante</p>
           </div>
           <div class="sol-price-row">
@@ -659,17 +659,48 @@ document.querySelectorAll('.causa-item').forEach(el => reveal(el));
 reveal(document.getElementById('sol-a'));
 reveal(document.getElementById('sol-b'));
 if (!noMotion) {
-  /* mdo counter — conta proporcionalmente ao scroll, reverte ao subir */
+  const ptBR = n => n.toLocaleString('pt-BR');
+  /* pvc-mat counter */
+  const pvcMatEl = document.getElementById('pvc-mat');
+  if (pvcMatEl) {
+    const pp = { v:0 };
+    gsap.fromTo(pp, { v:0 }, { v:975000, ease:'none',
+      onUpdate: () => { pvcMatEl.textContent = ptBR(Math.round(pp.v)); },
+      scrollTrigger:{ trigger:'#sol-a', start:'top 75%', end:'top 15%', scrub:true }
+    });
+  }
+  /* pvc-mo counter */
+  const pvcMoEl = document.getElementById('pvc-mo');
+  if (pvcMoEl) {
+    const pm = { v:0 };
+    gsap.fromTo(pm, { v:0 }, { v:375000, ease:'none',
+      onUpdate: () => { pvcMoEl.textContent = ptBR(Math.round(pm.v)); },
+      scrollTrigger:{ trigger:'#sol-a', start:'top 70%', end:'top 10%', scrub:true }
+    });
+  }
+  /* urt-mat counter */
+  const urtMatEl = document.getElementById('urt-mat');
+  if (urtMatEl) {
+    const pu = { v:0 };
+    gsap.fromTo(pu, { v:0 }, { v:465300, ease:'none',
+      onUpdate: () => { urtMatEl.textContent = ptBR(Math.round(pu.v)); },
+      scrollTrigger:{ trigger:'#sol-b', start:'top 80%', end:'top 20%', scrub:true }
+    });
+  }
+  /* mdo counter */
   const mdoEl = document.getElementById('mdo');
   if (mdoEl) {
     const p = { v:0 };
     gsap.fromTo(p, { v:0 }, { v:225000, ease:'none',
-      onUpdate: () => { mdoEl.textContent = Math.round(p.v).toLocaleString('pt-BR'); },
+      onUpdate: () => { mdoEl.textContent = ptBR(Math.round(p.v)); },
       scrollTrigger:{ trigger:'#sol-b', start:'top 75%', end:'top 15%', scrub:true }
     });
   }
 } else {
-  const m=document.getElementById('mdo'); if(m) m.textContent='225.000';
+  const m=document.getElementById('mdo');       if(m) m.textContent='225.000';
+  const pm=document.getElementById('pvc-mat');  if(pm) pm.textContent='975.000';
+  const po=document.getElementById('pvc-mo');   if(po) po.textContent='375.000';
+  const um=document.getElementById('urt-mat');  if(um) um.textContent='465.300';
 }
 reveal(document.getElementById('sol-disc'));
 
@@ -749,17 +780,28 @@ if (noMotion) {
 
 /* ── S7 CTA ── */
 if (!noMotion) {
-  gsap.fromTo('.cta-title', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
-    scrollTrigger:{ trigger:'#cta', start:'top 90%', end:'top 50%', scrub:true }
-  });
-  gsap.fromTo('.cta-sub', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
-    scrollTrigger:{ trigger:'#cta', start:'top 85%', end:'top 46%', scrub:true }
-  });
-  gsap.fromTo('.cta-btns', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
-    scrollTrigger:{ trigger:'#cta', start:'top 80%', end:'top 42%', scrub:true }
+  gsap.set('#cta .lbl',   {opacity:0, y:20});
+  gsap.set('.cta-title',  {opacity:0, y:60, scale:0.94});
+  gsap.set('.cta-sub',    {opacity:0, y:30});
+  gsap.set('.cta-btns',   {opacity:0, y:20});
+  ScrollTrigger.create({
+    trigger: '#cta', start: 'top 80%',
+    onEnter: () => {
+      gsap.timeline()
+        .to('#cta .lbl',  {opacity:1, y:0, duration:0.5, ease:'power2.out'})
+        .to('.cta-title', {opacity:1, y:0, scale:1, duration:1.0, ease:'power2.out'}, '-=0.2')
+        .to('.cta-sub',   {opacity:1, y:0, duration:0.7, ease:'power2.out'}, '-=0.5')
+        .to('.cta-btns',  {opacity:1, y:0, duration:0.6, ease:'power2.out'}, '-=0.4');
+    },
+    onLeaveBack: () => {
+      gsap.to('#cta .lbl',  {opacity:0, y:20, duration:0.3, ease:'power2.in', overwrite:true});
+      gsap.to('.cta-title', {opacity:0, y:60, scale:0.94, duration:0.4, ease:'power2.in', overwrite:true});
+      gsap.to('.cta-sub',   {opacity:0, y:30, duration:0.35, ease:'power2.in', overwrite:true});
+      gsap.to('.cta-btns',  {opacity:0, y:20, duration:0.3, ease:'power2.in', overwrite:true});
+    }
   });
 } else {
-  ['.cta-title','.cta-sub','.cta-btns'].forEach(s=>{
+  ['#cta .lbl','.cta-title','.cta-sub','.cta-btns'].forEach(s=>{
     const e=document.querySelector(s); if(e){e.style.opacity='1';e.style.transform='none';}
   });
 }
