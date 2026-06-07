@@ -208,60 +208,70 @@ section{position:relative;overflow:hidden;}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 
-/* ── FUNDO DINÂMICO — scroll-driven via --gy + animação de escala/posição ── */
-@keyframes bg-breathe{
-  0%  {opacity:.42; transform:scale(1)    translateY(0);}
-  50% {opacity:.80; transform:scale(1.35) translateY(-7%);}
-  100%{opacity:.42; transform:scale(1)    translateY(0);}
+/* ── FUNDO DINÂMICO — blob menor que viaja pela seção ── */
+/* blob < seção → movimento de translate é 100% visível dentro do overflow:hidden */
+@keyframes blob-hero{
+  0%  {opacity:.44; transform:translate(  0%,   0%) scale(1.0);}
+  30% {opacity:.80; transform:translate( 30%,  -22%) scale(1.28);}
+  60% {opacity:.55; transform:translate(-24%,   16%) scale(0.88);}
+  100%{opacity:.44; transform:translate(  0%,   0%) scale(1.0);}
 }
-@keyframes bg-breathe-b{
-  0%  {opacity:.44; transform:scale(1)    translate(0,0);}
-  50% {opacity:.82; transform:scale(1.28) translate(5%,-6%);}
-  100%{opacity:.44; transform:scale(1)    translate(0,0);}
+@keyframes blob-cta{
+  0%  {opacity:.46; transform:translate(  0%,   0%) scale(1.1);}
+  35% {opacity:.82; transform:translate(-26%,   18%) scale(1.30);}
+  70% {opacity:.58; transform:translate( 22%,  -14%) scale(0.90);}
+  100%{opacity:.46; transform:translate(  0%,   0%) scale(1.1);}
 }
-@keyframes bg-drift{
-  0%  {opacity:.38; transform:translate(0,0)    scale(1);}
-  33% {opacity:.72; transform:translate(7%,-6%) scale(1.18);}
-  66% {opacity:.46; transform:translate(-6%,5%) scale(0.90);}
-  100%{opacity:.38; transform:translate(0,0)    scale(1);}
+@keyframes blob-sec{
+  0%  {opacity:.38; transform:translate(  0%,   0%) scale(1.0);}
+  40% {opacity:.70; transform:translate( 42%,  -30%) scale(1.20);}
+  80% {opacity:.46; transform:translate(-30%,   22%) scale(0.85);}
+  100%{opacity:.38; transform:translate(  0%,   0%) scale(1.0);}
 }
 
-/* Hero — escala pulsa (keyframe) + glow sobe com o scroll (translate) */
+/* Hero — blob 65%×65%, viaja dentro da seção + parallax scroll */
 #hero::before{
-  content:'';position:absolute;inset:-30%;
-  background:radial-gradient(ellipse 65% 58% at 50% 42%,rgba(148,18,212,.62) 0%,rgba(90,0,145,.22) 50%,transparent 76%);
+  content:'';
+  position:absolute;
+  width:65%;height:65%;
+  top:17%;left:17%;
+  background:radial-gradient(ellipse at center,rgba(148,18,212,.65) 0%,rgba(90,0,145,.22) 46%,transparent 70%);
   pointer-events:none;
-  animation:bg-breathe 13s ease-in-out infinite;
-  translate:0 calc(var(--gy,0) * -0.38vh);
+  animation:blob-hero 14s ease-in-out infinite;
+  translate:0 calc(var(--gy,0) * -0.30vh);
   will-change:translate,transform,opacity;
 }
 
-/* CTA — deriva diagonal (keyframe) + acompanha scroll */
+/* CTA — blob 68%×68%, viaja em direção oposta */
 #cta::before{
-  content:'';position:absolute;inset:-30%;
-  background:radial-gradient(ellipse 68% 64% at 50% 52%,rgba(148,18,212,.65) 0%,rgba(90,0,145,.24) 48%,transparent 74%);
+  content:'';
+  position:absolute;
+  width:68%;height:68%;
+  top:16%;left:16%;
+  background:radial-gradient(ellipse at center,rgba(148,18,212,.68) 0%,rgba(90,0,145,.24) 44%,transparent 70%);
   pointer-events:none;
-  animation:bg-breathe-b 16s ease-in-out infinite;
-  translate:calc(var(--gy,0) * 0.08vh) calc(var(--gy,0) * -0.28vh);
+  animation:blob-cta 17s ease-in-out infinite;
+  translate:calc(var(--gy,0) * 0.07vh) calc(var(--gy,0) * -0.22vh);
   will-change:translate,transform,opacity;
 }
 
-/* Seções — glow moderado que roda/deriva por conta própria + parallax suave */
+/* Seções — blob 55%×55%, viaja por todo o espaço da seção */
 #diag::before,#causa::before,#sol::before,#rest::before,#esc::before,#aut::before{
   content:'';
   position:absolute;
-  width:100%;height:100%;
-  background:radial-gradient(ellipse at center,rgba(125,0,165,.22) 0%,rgba(85,0,135,.07) 50%,transparent 72%);
+  width:55%;height:55%;
+  top:22%;left:22%;
+  background:radial-gradient(ellipse at center,rgba(125,0,165,.22) 0%,rgba(85,0,135,.07) 48%,transparent 72%);
   pointer-events:none;
-  animation:bg-drift 20s ease-in-out infinite;
-  translate:0 calc(var(--gy,0) * -0.13vh);
+  animation:blob-sec 22s ease-in-out infinite;
+  translate:0 calc(var(--gy,0) * -0.12vh);
 }
-#diag::before {top:-5%;  left:5%;  animation-delay:0s;}
-#causa::before{top:10%;  left:40%; animation-delay:-7s;}
-#sol::before  {top:0%;   left:8%;  animation-delay:-3s;}
-#rest::before {top:5%;   left:38%; animation-delay:-13s;}
-#esc::before  {top:-2%;  left:2%;  animation-delay:-2s;}
-#aut::before  {top:5%;   left:30%; animation-delay:-10s;}
+#diag::before {animation-delay:  0s;}
+#causa::before{animation-delay: -8s;}
+#sol::before  {animation-delay: -3s;}
+#rest::before {animation-delay:-14s;}
+#esc::before  {animation-delay: -2s;}
+#aut::before  {animation-delay:-10s;}
 </style>
 </head>
 <body>
