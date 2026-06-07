@@ -210,53 +210,53 @@ section{position:relative;overflow:hidden;}
 
 /* ── FUNDO DINÂMICO ── */
 @keyframes bg-breathe{
-  0%,100%{opacity:.48;transform:scale(1);}
-  50%    {opacity:1;  transform:scale(1.22) translateY(-3%);}
+  0%,100%{opacity:.4; transform:scale(1);}
+  50%    {opacity:1;  transform:scale(1.25) translateY(-4%);}
 }
 @keyframes bg-breathe-b{
-  0%,100%{opacity:.5; transform:scale(1) translateX(0);}
-  50%    {opacity:1;  transform:scale(1.18) translateX(2%) translateY(-2%);}
+  0%,100%{opacity:.42;transform:scale(1);}
+  50%    {opacity:1;  transform:scale(1.2) translateX(3%) translateY(-3%);}
 }
 @keyframes bg-drift{
-  0%   {opacity:.28;transform:translate(0,0) scale(1);}
-  34%  {opacity:.58;transform:translate(7%,-5%) scale(1.09);}
-  68%  {opacity:.34;transform:translate(-5%,7%) scale(.94);}
-  100% {opacity:.28;transform:translate(0,0) scale(1);}
+  0%   {opacity:.5; transform:translate(0,0) scale(1);}
+  34%  {opacity:1;  transform:translate(8%,-6%) scale(1.1);}
+  68%  {opacity:.6; transform:translate(-6%,8%) scale(.93);}
+  100% {opacity:.5; transform:translate(0,0) scale(1);}
 }
 
 /* Hero — pulso profundo e lento */
 #hero::before{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 58% 52% at 50% 28%,rgba(115,1,140,.24) 0%,rgba(26,0,48,.07) 58%,transparent 80%);
+  background:radial-gradient(ellipse 62% 55% at 50% 30%,rgba(138,30,200,.5) 0%,rgba(80,0,130,.15) 52%,transparent 78%);
   pointer-events:none;
-  animation:bg-breathe 15s ease-in-out infinite;
+  animation:bg-breathe 14s ease-in-out infinite;
   will-change:opacity,transform;
 }
 
-/* CTA — pulso mais lento e levemente deslocado */
+/* CTA — pulso mais lento e deslocado */
 #cta::before{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 64% 60% at 50% 50%,rgba(115,1,140,.32) 0%,rgba(26,0,48,.1) 54%,transparent 80%);
+  background:radial-gradient(ellipse 66% 62% at 50% 50%,rgba(138,30,200,.55) 0%,rgba(80,0,130,.18) 50%,transparent 78%);
   pointer-events:none;
-  animation:bg-breathe-b 18s ease-in-out infinite;
+  animation:bg-breathe-b 17s ease-in-out infinite;
   will-change:opacity,transform;
 }
 
-/* Seções de conteúdo — brilho subliminar (~5% opacidade), quase imperceptível */
+/* Seções de conteúdo — glow visível mas discreto */
 #diag::before,#causa::before,#sol::before,#rest::before,#esc::before,#aut::before{
   content:'';
   position:absolute;
-  width:72%;height:72%;
-  background:radial-gradient(ellipse at center,rgba(115,1,140,.05) 0%,transparent 68%);
+  width:80%;height:80%;
+  background:radial-gradient(ellipse at center,rgba(115,1,140,.13) 0%,rgba(80,0,130,.04) 50%,transparent 72%);
   pointer-events:none;
-  animation:bg-drift 24s ease-in-out infinite;
+  animation:bg-drift 22s ease-in-out infinite;
 }
-#diag::before {top:2%;   left:14%; animation-delay:0s;}
-#causa::before{top:18%;  left:52%; animation-delay:-9s;}
-#sol::before  {top:8%;   left:18%; animation-delay:-5s;}
-#rest::before {top:12%;  left:46%; animation-delay:-16s;}
-#esc::before  {top:5%;   left:6%;  animation-delay:-3s;}
-#aut::before  {top:10%;  left:38%; animation-delay:-12s;}
+#diag::before {top:0%;   left:10%; animation-delay:0s;}
+#causa::before{top:15%;  left:48%; animation-delay:-8s;}
+#sol::before  {top:5%;   left:15%; animation-delay:-4s;}
+#rest::before {top:10%;  left:42%; animation-delay:-15s;}
+#esc::before  {top:3%;   left:4%;  animation-delay:-2s;}
+#aut::before  {top:8%;   left:35%; animation-delay:-11s;}
 </style>
 </head>
 <body>
@@ -397,12 +397,12 @@ section{position:relative;overflow:hidden;}
         <div class="sol-price">
           <div class="sol-price-row">
             <p class="sol-price-lbl">Material (fornecido pela Klabin)</p>
-            <p class="sol-price-val">R$&nbsp;<span id="pvc-mat">0</span></p>
+            <p class="sol-price-val">R$&nbsp;<span id="pvc-mat">975.000</span></p>
             <p class="sol-price-note">Faturado diretamente pela Klabin ao fabricante</p>
           </div>
           <div class="sol-price-row">
             <p class="sol-price-lbl">Mão de obra — AS Construction</p>
-            <p class="sol-price-val">R$&nbsp;<span id="pvc-mo">0</span></p>
+            <p class="sol-price-val">R$&nbsp;<span id="pvc-mo">375.000</span></p>
             <p class="sol-price-note">Faturado pela AS Construction</p>
           </div>
         </div>
@@ -431,12 +431,12 @@ section{position:relative;overflow:hidden;}
         <div class="sol-price">
           <div class="sol-price-row">
             <p class="sol-price-lbl">Material (fornecido pela Klabin)</p>
-            <p class="sol-price-val">R$&nbsp;<span id="urt-mat">0</span></p>
+            <p class="sol-price-val">R$&nbsp;<span id="urt-mat">465.300</span></p>
             <p class="sol-price-note">Faturado diretamente pela Klabin ao fabricante</p>
           </div>
           <div class="sol-price-row">
             <p class="sol-price-lbl">Mão de obra — AS Construction</p>
-            <p class="sol-price-val">R$&nbsp;<span id="mdo">0</span></p>
+            <p class="sol-price-val">R$&nbsp;<span id="mdo">225.000</span></p>
             <p class="sol-price-note">Faturado pela AS Construction</p>
           </div>
         </div>
@@ -713,38 +713,31 @@ const pvcMoEl  = document.getElementById('pvc-mo');
 const urtMatEl = document.getElementById('urt-mat');
 const mdoEl    = document.getElementById('mdo');
 if (!noMotion) {
+  const solA = document.getElementById('sol-a');
+  const solB = document.getElementById('sol-b');
+  /* Zera visualmente antes de começar a contar */
+  if (pvcMatEl) pvcMatEl.textContent = '0';
+  if (pvcMoEl)  pvcMoEl.textContent  = '0';
+  if (urtMatEl) urtMatEl.textContent = '0';
+  if (mdoEl)    mdoEl.textContent    = '0';
+  /* Calcula progresso (0→1) de um elemento baseado em getBoundingClientRect */
+  function solProgress(el, startFrac, endFrac) {
+    const t = el.getBoundingClientRect().top;
+    const vh = window.innerHeight;
+    return Math.max(0, Math.min(1, (vh * startFrac - t) / (vh * (startFrac - endFrac))));
+  }
   const ptBR = n => Math.round(n).toLocaleString('pt-BR');
-  if (pvcMatEl) ScrollTrigger.create({
-    trigger:'#sol-a', start:'top 85%', end:'top 25%',
-    onUpdate:     s => { pvcMatEl.textContent = ptBR(s.progress * 975000); },
-    onLeave:      () => { pvcMatEl.textContent = '975.000'; },
-    onLeaveBack:  () => { pvcMatEl.textContent = '0'; }
+  lenis.on('scroll', function() {
+    if (solA) {
+      if (pvcMatEl) pvcMatEl.textContent = ptBR(solProgress(solA, 0.88, 0.22) * 975000);
+      if (pvcMoEl)  pvcMoEl.textContent  = ptBR(solProgress(solA, 0.82, 0.16) * 375000);
+    }
+    if (solB) {
+      if (urtMatEl) urtMatEl.textContent = ptBR(solProgress(solB, 0.88, 0.22) * 465300);
+      if (mdoEl)    mdoEl.textContent    = ptBR(solProgress(solB, 0.82, 0.16) * 225000);
+    }
   });
-  if (pvcMoEl) ScrollTrigger.create({
-    trigger:'#sol-a', start:'top 80%', end:'top 20%',
-    onUpdate:     s => { pvcMoEl.textContent = ptBR(s.progress * 375000); },
-    onLeave:      () => { pvcMoEl.textContent = '375.000'; },
-    onLeaveBack:  () => { pvcMoEl.textContent = '0'; }
-  });
-  if (urtMatEl) ScrollTrigger.create({
-    trigger:'#sol-b', start:'top 85%', end:'top 25%',
-    onUpdate:     s => { urtMatEl.textContent = ptBR(s.progress * 465300); },
-    onLeave:      () => { urtMatEl.textContent = '465.300'; },
-    onLeaveBack:  () => { urtMatEl.textContent = '0'; }
-  });
-  if (mdoEl) ScrollTrigger.create({
-    trigger:'#sol-b', start:'top 80%', end:'top 20%',
-    onUpdate:     s => { mdoEl.textContent = ptBR(s.progress * 225000); },
-    onLeave:      () => { mdoEl.textContent = '225.000'; },
-    onLeaveBack:  () => { mdoEl.textContent = '0'; }
-  });
-} else {
-  if(pvcMatEl) pvcMatEl.textContent='975.000';
-  if(pvcMoEl)  pvcMoEl.textContent='375.000';
-  if(urtMatEl) urtMatEl.textContent='465.300';
-  if(mdoEl)    mdoEl.textContent='225.000';
 }
-reveal(document.getElementById('sol-disc'));
 
 /* ── RESTAURANTE ── */
 reveal(document.querySelector('#rest .rest-head .lbl'));
