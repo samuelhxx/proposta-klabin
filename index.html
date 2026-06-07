@@ -208,56 +208,60 @@ section{position:relative;overflow:hidden;}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 
-/* ── FUNDO DINÂMICO — scroll-driven via --gy ── */
+/* ── FUNDO DINÂMICO — scroll-driven via --gy + animação de escala/posição ── */
 @keyframes bg-breathe{
-  0%,100%{opacity:.55;}
-  50%    {opacity:1;}
+  0%  {opacity:.42; transform:scale(1)    translateY(0);}
+  50% {opacity:.80; transform:scale(1.35) translateY(-7%);}
+  100%{opacity:.42; transform:scale(1)    translateY(0);}
 }
 @keyframes bg-breathe-b{
-  0%,100%{opacity:.58;}
-  50%    {opacity:1;}
+  0%  {opacity:.44; transform:scale(1)    translate(0,0);}
+  50% {opacity:.82; transform:scale(1.28) translate(5%,-6%);}
+  100%{opacity:.44; transform:scale(1)    translate(0,0);}
 }
-@keyframes bg-pulse{
-  0%,100%{opacity:.50;}
-  50%    {opacity:.90;}
+@keyframes bg-drift{
+  0%  {opacity:.38; transform:translate(0,0)    scale(1);}
+  33% {opacity:.72; transform:translate(7%,-6%) scale(1.18);}
+  66% {opacity:.46; transform:translate(-6%,5%) scale(0.90);}
+  100%{opacity:.38; transform:translate(0,0)    scale(1);}
 }
 
-/* Hero — parallax forte: glow sobe 45vh ao longo do scroll todo */
+/* Hero — escala pulsa (keyframe) + glow sobe com o scroll (translate) */
 #hero::before{
-  content:'';position:absolute;inset:-35%;
-  background:radial-gradient(ellipse 70% 60% at 50% 42%,rgba(160,20,220,.80) 0%,rgba(100,0,160,.35) 48%,transparent 74%);
+  content:'';position:absolute;inset:-30%;
+  background:radial-gradient(ellipse 65% 58% at 50% 42%,rgba(148,18,212,.62) 0%,rgba(90,0,145,.22) 50%,transparent 76%);
   pointer-events:none;
-  animation:bg-breathe 12s ease-in-out infinite;
-  translate:0 calc(var(--gy,0) * -0.60vh);
-  will-change:translate,opacity;
+  animation:bg-breathe 13s ease-in-out infinite;
+  translate:0 calc(var(--gy,0) * -0.38vh);
+  will-change:translate,transform,opacity;
 }
 
-/* CTA — deriva diagonal perceptível */
+/* CTA — deriva diagonal (keyframe) + acompanha scroll */
 #cta::before{
-  content:'';position:absolute;inset:-35%;
-  background:radial-gradient(ellipse 74% 68% at 50% 52%,rgba(160,20,220,.85) 0%,rgba(100,0,160,.38) 46%,transparent 72%);
+  content:'';position:absolute;inset:-30%;
+  background:radial-gradient(ellipse 68% 64% at 50% 52%,rgba(148,18,212,.65) 0%,rgba(90,0,145,.24) 48%,transparent 74%);
   pointer-events:none;
-  animation:bg-breathe-b 15s ease-in-out infinite;
-  translate:calc(var(--gy,0) * 0.10vh) calc(var(--gy,0) * -0.40vh);
-  will-change:translate,opacity;
+  animation:bg-breathe-b 16s ease-in-out infinite;
+  translate:calc(var(--gy,0) * 0.08vh) calc(var(--gy,0) * -0.28vh);
+  will-change:translate,transform,opacity;
 }
 
-/* Seções de conteúdo — glow mais visível, drift lateral alternado */
+/* Seções — glow moderado que roda/deriva por conta própria + parallax suave */
 #diag::before,#causa::before,#sol::before,#rest::before,#esc::before,#aut::before{
   content:'';
   position:absolute;
-  width:110%;height:110%;
-  background:radial-gradient(ellipse at center,rgba(140,0,180,.32) 0%,rgba(90,0,140,.10) 48%,transparent 70%);
+  width:100%;height:100%;
+  background:radial-gradient(ellipse at center,rgba(125,0,165,.22) 0%,rgba(85,0,135,.07) 50%,transparent 72%);
   pointer-events:none;
-  animation:bg-pulse 18s ease-in-out infinite;
-  translate:0 calc(var(--gy,0) * -0.18vh);
+  animation:bg-drift 20s ease-in-out infinite;
+  translate:0 calc(var(--gy,0) * -0.13vh);
 }
 #diag::before {top:-5%;  left:5%;  animation-delay:0s;}
-#causa::before{top:10%;  left:40%; animation-delay:-6s;}
+#causa::before{top:10%;  left:40%; animation-delay:-7s;}
 #sol::before  {top:0%;   left:8%;  animation-delay:-3s;}
-#rest::before {top:5%;   left:38%; animation-delay:-12s;}
+#rest::before {top:5%;   left:38%; animation-delay:-13s;}
 #esc::before  {top:-2%;  left:2%;  animation-delay:-2s;}
-#aut::before  {top:5%;   left:30%; animation-delay:-9s;}
+#aut::before  {top:5%;   left:30%; animation-delay:-10s;}
 </style>
 </head>
 <body>
