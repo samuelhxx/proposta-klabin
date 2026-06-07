@@ -757,32 +757,10 @@ document.querySelectorAll('.causa-item').forEach(el => reveal(el));
 
 /* ── HELPERS ── */
 const ptBR = n => Math.round(n).toLocaleString('pt-BR');
-
-/* ioCounter — IntersectionObserver, 800ms rAF, bidirecional */
-function ioCounter(triggerEl, els, targets, fmts) {
-  if (!triggerEl) return;
-  const rids = [];
-  function go() {
-    els.forEach((el, i) => {
-      if (!el) return;
-      cancelAnimationFrame(rids[i]);
-      const tgt = targets[i], fmt = (fmts && fmts[i]) || ptBR, t0 = performance.now();
-      function step(now) {
-        const p = Math.min((now - t0) / 800, 1);
-        el.textContent = fmt((1 - Math.pow(1 - p, 2)) * tgt);
-        if (p < 1) rids[i] = requestAnimationFrame(step);
-        else el.textContent = fmt(tgt);
-      }
-      rids[i] = requestAnimationFrame(step);
-    });
-  }
-  function reset() {
-    els.forEach((el, i) => { cancelAnimationFrame(rids[i]); if (el) el.textContent = '0'; });
-  }
-  new IntersectionObserver(([e]) => {
-    if (e.isIntersecting) go();
-    else if (e.boundingClientRect.top > 0) reset();
-  }, { threshold: 0.2 }).observe(triggerEl);
+/* sp: progresso 0→1 enquanto el.top desce de s*vh até e*vh */
+function sp(el, s, e) {
+  const t = el.getBoundingClientRect().top, vh = window.innerHeight;
+  return Math.max(0, Math.min(1, (vh*s - t) / (vh*(s-e))));
 }
 
 /* ── S4 SOLUÇÕES ── */
@@ -793,13 +771,17 @@ const pvcMatEl = document.getElementById('pvc-mat');
 const pvcMoEl  = document.getElementById('pvc-mo');
 const urtMatEl = document.getElementById('urt-mat');
 const mdoEl    = document.getElementById('mdo');
+if (pvcMatEl) pvcMatEl.textContent = noMotion ? '975.000' : '0';
+if (pvcMoEl)  pvcMoEl.textContent  = noMotion ? '375.000' : '0';
+if (urtMatEl) urtMatEl.textContent = noMotion ? '465.300' : '0';
+if (mdoEl)    mdoEl.textContent    = noMotion ? '225.000' : '0';
 if (!noMotion) {
-  if (pvcMatEl) pvcMatEl.textContent = '0';
-  if (pvcMoEl)  pvcMoEl.textContent  = '0';
-  if (urtMatEl) urtMatEl.textContent = '0';
-  if (mdoEl)    mdoEl.textContent    = '0';
-  ioCounter(document.getElementById('sol-a'), [pvcMatEl, pvcMoEl], [975000, 375000]);
-  ioCounter(document.getElementById('sol-b'), [urtMatEl, mdoEl],   [465300, 225000]);
+  lenis.on('scroll', function() {
+    if (pvcMatEl) pvcMatEl.textContent = ptBR(sp(pvcMatEl, 0.95, 0.78) * 975000);
+    if (pvcMoEl)  pvcMoEl.textContent  = ptBR(sp(pvcMoEl,  0.95, 0.78) * 375000);
+    if (urtMatEl) urtMatEl.textContent = ptBR(sp(urtMatEl, 0.95, 0.78) * 465300);
+    if (mdoEl)    mdoEl.textContent    = ptBR(sp(mdoEl,    0.95, 0.78) * 225000);
+  });
 }
 
 /* ── RESTAURANTE ── */
@@ -810,13 +792,13 @@ document.querySelectorAll('.rest-step').forEach(el => reveal(el));
 reveal(document.getElementById('rest-price'));
 const rmEl = document.getElementById('rest-mat');
 const roEl = document.getElementById('rest-mo');
+if (rmEl) rmEl.textContent = noMotion ? '31.680' : '0';
+if (roEl) roEl.textContent = noMotion ? '21.000' : '0';
 if (!noMotion) {
-  if (rmEl) rmEl.textContent = '0';
-  if (roEl) roEl.textContent = '0';
-  ioCounter(document.getElementById('rest-price'), [rmEl, roEl], [31680, 21000]);
-} else {
-  if (rmEl) rmEl.textContent = '31.680';
-  if (roEl) roEl.textContent = '21.000';
+  lenis.on('scroll', function() {
+    if (rmEl) rmEl.textContent = ptBR(sp(rmEl, 0.95, 0.78) * 31680);
+    if (roEl) roEl.textContent = ptBR(sp(roEl, 0.95, 0.78) * 21000);
+  });
 }
 
 /* ── S5 ESCOPO ── */
@@ -839,13 +821,15 @@ if (noMotion) {
   gsap.fromTo('#n2', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
     scrollTrigger:{ trigger:'#aut', start:'top 80%', end:'top 47%', scrub:true }
   });
-  /* contadores — IntersectionObserver, bidirecional */
+  /* contadores anos/obras — scroll-linked, bidirecional */
   const canosEl  = document.getElementById('canos');
   const cobrasEl = document.getElementById('cobras');
   if (canosEl)  canosEl.textContent  = '0';
   if (cobrasEl) cobrasEl.textContent = '0';
-  const intFmt = n => String(Math.round(n));
-  ioCounter(document.getElementById('aut'), [canosEl, cobrasEl], [20, 35], [intFmt, intFmt]);
+  lenis.on('scroll', function() {
+    if (canosEl)  canosEl.textContent  = String(Math.round(sp(canosEl,  0.95, 0.78) * 20));
+    if (cobrasEl) cobrasEl.textContent = String(Math.round(sp(cobrasEl, 0.95, 0.78) * 35));
+  });
   /* aut-points — slide da direita, escalonados */
   document.querySelectorAll('.aut-point').forEach((el, i) => {
     gsap.fromTo(el, { opacity:0, x:70 }, { opacity:1, x:0, ease:'power1.out',
