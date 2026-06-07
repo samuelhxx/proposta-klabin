@@ -210,54 +210,54 @@ section{position:relative;overflow:hidden;}
 
 /* ── FUNDO DINÂMICO — scroll-driven via --gy ── */
 @keyframes bg-breathe{
-  0%,100%{opacity:.38;}
-  50%    {opacity:.75;}
+  0%,100%{opacity:.55;}
+  50%    {opacity:1;}
 }
 @keyframes bg-breathe-b{
-  0%,100%{opacity:.40;}
-  50%    {opacity:.80;}
+  0%,100%{opacity:.58;}
+  50%    {opacity:1;}
 }
 @keyframes bg-pulse{
-  0%,100%{opacity:.42;}
-  50%    {opacity:.72;}
+  0%,100%{opacity:.50;}
+  50%    {opacity:.90;}
 }
 
-/* Hero — escala fixa, só opacidade pulsa; translate é comandado pelo scroll */
+/* Hero — parallax forte: glow sobe 45vh ao longo do scroll todo */
 #hero::before{
-  content:'';position:absolute;inset:-25%;
-  background:radial-gradient(ellipse 62% 55% at 50% 42%,rgba(138,30,200,.55) 0%,rgba(80,0,130,.18) 52%,transparent 76%);
+  content:'';position:absolute;inset:-35%;
+  background:radial-gradient(ellipse 70% 60% at 50% 42%,rgba(160,20,220,.80) 0%,rgba(100,0,160,.35) 48%,transparent 74%);
   pointer-events:none;
-  animation:bg-breathe 14s ease-in-out infinite;
-  translate:0 calc(var(--gy,0) * -0.45vh);
+  animation:bg-breathe 12s ease-in-out infinite;
+  translate:0 calc(var(--gy,0) * -0.60vh);
   will-change:translate,opacity;
 }
 
-/* CTA — deriva diagonal conforme scroll */
+/* CTA — deriva diagonal perceptível */
 #cta::before{
-  content:'';position:absolute;inset:-25%;
-  background:radial-gradient(ellipse 66% 62% at 50% 52%,rgba(138,30,200,.60) 0%,rgba(80,0,130,.20) 50%,transparent 76%);
+  content:'';position:absolute;inset:-35%;
+  background:radial-gradient(ellipse 74% 68% at 50% 52%,rgba(160,20,220,.85) 0%,rgba(100,0,160,.38) 46%,transparent 72%);
   pointer-events:none;
-  animation:bg-breathe-b 17s ease-in-out infinite;
-  translate:calc(var(--gy,0) * 0.06vh) calc(var(--gy,0) * -0.30vh);
+  animation:bg-breathe-b 15s ease-in-out infinite;
+  translate:calc(var(--gy,0) * 0.10vh) calc(var(--gy,0) * -0.40vh);
   will-change:translate,opacity;
 }
 
-/* Seções de conteúdo — glow sutil com drift leve no scroll */
+/* Seções de conteúdo — glow mais visível, drift lateral alternado */
 #diag::before,#causa::before,#sol::before,#rest::before,#esc::before,#aut::before{
   content:'';
   position:absolute;
-  width:90%;height:90%;
-  background:radial-gradient(ellipse at center,rgba(115,1,140,.16) 0%,rgba(80,0,130,.05) 50%,transparent 72%);
+  width:110%;height:110%;
+  background:radial-gradient(ellipse at center,rgba(140,0,180,.32) 0%,rgba(90,0,140,.10) 48%,transparent 70%);
   pointer-events:none;
-  animation:bg-pulse 20s ease-in-out infinite;
-  translate:0 calc(var(--gy,0) * -0.10vh);
+  animation:bg-pulse 18s ease-in-out infinite;
+  translate:0 calc(var(--gy,0) * -0.18vh);
 }
-#diag::before {top:0%;   left:10%; animation-delay:0s;}
-#causa::before{top:15%;  left:44%; animation-delay:-7s;}
-#sol::before  {top:5%;   left:12%; animation-delay:-3s;}
-#rest::before {top:10%;  left:40%; animation-delay:-13s;}
-#esc::before  {top:3%;   left:4%;  animation-delay:-2s;}
-#aut::before  {top:8%;   left:32%; animation-delay:-10s;}
+#diag::before {top:-5%;  left:5%;  animation-delay:0s;}
+#causa::before{top:10%;  left:40%; animation-delay:-6s;}
+#sol::before  {top:0%;   left:8%;  animation-delay:-3s;}
+#rest::before {top:5%;   left:38%; animation-delay:-12s;}
+#esc::before  {top:-2%;  left:2%;  animation-delay:-2s;}
+#aut::before  {top:5%;   left:30%; animation-delay:-9s;}
 </style>
 </head>
 <body>
