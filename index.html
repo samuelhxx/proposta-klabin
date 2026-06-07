@@ -755,13 +755,17 @@ document.querySelectorAll('.layer').forEach(el => {
 });
 document.querySelectorAll('.causa-item').forEach(el => reveal(el));
 
-/* ── HELPERS: progresso por scroll + formatação pt-BR ── */
-function solProgress(el, startFrac, endFrac) {
-  const t = el.getBoundingClientRect().top;
-  const vh = window.innerHeight;
-  return Math.max(0, Math.min(1, (vh * startFrac - t) / (vh * (startFrac - endFrac))));
-}
+/* ── HELPERS ── */
 const ptBR = n => Math.round(n).toLocaleString('pt-BR');
+function startCounter(el, target, fmt) {
+  fmt = fmt || ptBR;
+  const p = { v: 0 };
+  gsap.killTweensOf(p);
+  gsap.to(p, { v: target, duration: 0.85, ease: 'power2.out',
+    onUpdate:  () => { el.textContent = fmt(p.v); },
+    onComplete:() => { el.textContent = fmt(target); }
+  });
+}
 
 /* ── S4 SOLUÇÕES ── */
 reveal(document.getElementById('sol-a'));
@@ -776,11 +780,17 @@ if (!noMotion) {
   if (pvcMoEl)  pvcMoEl.textContent  = '0';
   if (urtMatEl) urtMatEl.textContent = '0';
   if (mdoEl)    mdoEl.textContent    = '0';
-  lenis.on('scroll', function() {
-    if (pvcMatEl) pvcMatEl.textContent = ptBR(solProgress(pvcMatEl, 0.92, 0.52) * 975000);
-    if (pvcMoEl)  pvcMoEl.textContent  = ptBR(solProgress(pvcMoEl,  0.92, 0.52) * 375000);
-    if (urtMatEl) urtMatEl.textContent = ptBR(solProgress(urtMatEl, 0.92, 0.52) * 465300);
-    if (mdoEl)    mdoEl.textContent    = ptBR(solProgress(mdoEl,    0.92, 0.52) * 225000);
+  ScrollTrigger.create({ trigger:'#sol-a', start:'top 80%', once:true,
+    onEnter() {
+      if (pvcMatEl) startCounter(pvcMatEl, 975000);
+      if (pvcMoEl)  startCounter(pvcMoEl,  375000);
+    }
+  });
+  ScrollTrigger.create({ trigger:'#sol-b', start:'top 80%', once:true,
+    onEnter() {
+      if (urtMatEl) startCounter(urtMatEl, 465300);
+      if (mdoEl)    startCounter(mdoEl,    225000);
+    }
   });
 }
 
@@ -795,9 +805,11 @@ const roEl = document.getElementById('rest-mo');
 if (!noMotion) {
   if (rmEl) rmEl.textContent = '0';
   if (roEl) roEl.textContent = '0';
-  lenis.on('scroll', function() {
-    if (rmEl) rmEl.textContent = ptBR(solProgress(rmEl, 0.92, 0.52) * 31680);
-    if (roEl) roEl.textContent = ptBR(solProgress(roEl, 0.92, 0.52) * 21000);
+  ScrollTrigger.create({ trigger:'#rest-price', start:'top 80%', once:true,
+    onEnter() {
+      if (rmEl) startCounter(rmEl, 31680);
+      if (roEl) startCounter(roEl, 21000);
+    }
   });
 } else {
   if (rmEl) rmEl.textContent = '31.680';
@@ -824,14 +836,16 @@ if (noMotion) {
   gsap.fromTo('#n2', { opacity:0, y:80 }, { opacity:1, y:0, ease:'power1.out',
     scrollTrigger:{ trigger:'#aut', start:'top 80%', end:'top 47%', scrub:true }
   });
-  /* contadores — lenis-driven, revertível */
+  /* contadores — disparam ao entrar na tela, completam em 0.85s */
   const canosEl  = document.getElementById('canos');
   const cobrasEl = document.getElementById('cobras');
   if (canosEl)  canosEl.textContent  = '0';
   if (cobrasEl) cobrasEl.textContent = '0';
-  lenis.on('scroll', function() {
-    if (canosEl)  canosEl.textContent  = Math.round(solProgress(canosEl,  0.92, 0.42) * 20).toString();
-    if (cobrasEl) cobrasEl.textContent = Math.round(solProgress(cobrasEl, 0.92, 0.42) * 35).toString();
+  ScrollTrigger.create({ trigger:'#aut', start:'top 80%', once:true,
+    onEnter() {
+      if (canosEl)  startCounter(canosEl,  20, n => String(Math.round(n)));
+      if (cobrasEl) startCounter(cobrasEl, 35, n => String(Math.round(n)));
+    }
   });
   /* aut-points — slide da direita, escalonados */
   document.querySelectorAll('.aut-point').forEach((el, i) => {
