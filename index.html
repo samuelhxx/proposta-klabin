@@ -886,64 +886,52 @@ if (!noMotion) {
     { src:'2.jpeg', cap:'Detalhe — Trincas e juntas comprometidas' },
     { src:'3.jpeg', cap:'Drenagem — Pontos de acúmulo identificados' }
   ];
-  let cur = 0, busy = false;
-  const lb    = document.getElementById('lb');
-  const lbBg  = document.getElementById('lb-bg');
-  const lbImg = document.getElementById('lb-img');
-  const lbCap = document.getElementById('lb-cap');
-  const dots  = document.querySelectorAll('.lb-dot');
+  let cur = 0;
+  const lb   = document.getElementById('lb');
+  const lbBg = document.getElementById('lb-bg');
+  const lbImg= document.getElementById('lb-img');
+  const lbCap= document.getElementById('lb-cap');
+  const dots = document.querySelectorAll('.lb-dot');
 
   function setDot(i){ dots.forEach((d,j)=>d.classList.toggle('active',j===i)); }
 
-  function lbOpen(idx, originEl){
-    if(busy) return;
+  function lbOpen(idx){
     cur = idx;
     lbImg.src = photos[cur].src;
-    lbImg.alt = photos[cur].cap;
     lbCap.textContent = photos[cur].cap;
     setDot(cur);
     lb.classList.add('lb-on');
     lenis.stop();
-    const r = originEl.getBoundingClientRect();
-    const sc = Math.min(r.width / window.innerWidth, r.height / window.innerHeight) * 1.6;
-    const dx = r.left + r.width/2  - window.innerWidth/2;
-    const dy = r.top  + r.height/2 - window.innerHeight/2;
-    gsap.set(lbImg, {opacity:0, scale:Math.min(sc,.5), x:dx, y:dy});
-    gsap.set(lbCap, {opacity:0, y:16});
-    gsap.fromTo(lbBg, {opacity:0}, {opacity:1, duration:.30, ease:'power2.out'});
-    gsap.to(lbImg, {opacity:1, scale:1, x:0, y:0, duration:.50, ease:'expo.out'});
-    gsap.to(lbCap, {opacity:1, y:0, duration:.32, delay:.20, ease:'power2.out'});
+    gsap.killTweensOf([lbImg, lbCap]);
+    gsap.fromTo(lb,   {opacity:0}, {opacity:1, duration:.30, ease:'power2.out'});
+    gsap.fromTo(lbImg,{opacity:0, scale:.72, y:36},{opacity:1, scale:1, y:0, duration:.48, ease:'expo.out'});
+    gsap.fromTo(lbCap,{opacity:0, y:14},{opacity:1, y:0, duration:.30, delay:.22, ease:'power2.out'});
   }
 
   function lbClose(){
-    if(busy) return; busy=true;
-    gsap.to(lbBg, {opacity:0, duration:.22, ease:'power2.in'});
-    gsap.to([lbImg,lbCap], {opacity:0, scale:.88, y:18, duration:.25, ease:'power2.in',
-      onComplete(){
-        lb.classList.remove('lb-on');
-        lbImg.src='';
-        gsap.set([lbImg,lbCap],{clearProps:'all'});
-        lenis.start();
-        busy=false;
-      }
-    });
+    lenis.start();
+    gsap.killTweensOf([lbImg, lbCap]);
+    gsap.to(lb, {opacity:0, duration:.24, ease:'power2.in', onComplete(){
+      lb.classList.remove('lb-on');
+      gsap.set(lb, {clearProps:'opacity'});
+      lbImg.src = '';
+    }});
   }
 
   function lbGoto(dir){
-    if(busy) return; busy=true;
     const nx = (cur + dir + photos.length) % photos.length;
-    gsap.to(lbImg, {opacity:0, x:dir*-50, duration:.17, ease:'power2.in', onComplete(){
-      cur=nx;
-      lbImg.src=photos[cur].src;
-      lbImg.alt=photos[cur].cap;
-      lbCap.textContent=photos[cur].cap;
+    gsap.killTweensOf(lbImg);
+    gsap.to(lbImg, {opacity:0, x:dir*-45, duration:.16, ease:'power2.in', onComplete(){
+      cur = nx;
+      lbImg.src = photos[cur].src;
+      lbCap.textContent = photos[cur].cap;
       setDot(cur);
-      gsap.fromTo(lbImg,{opacity:0,x:dir*50},{opacity:1,x:0,duration:.26,ease:'power2.out',onComplete(){busy=false;}});
+      gsap.fromTo(lbImg,{opacity:0,x:dir*45},{opacity:1,x:0,duration:.24,ease:'power2.out'});
     }});
   }
 
   document.querySelectorAll('.photo-box').forEach((box,i)=>{
-    box.addEventListener('click', ()=>lbOpen(i,box));
+    box.addEventListener('click', ()=>lbOpen(i));
   });
   document.getElementById('lb-bg').addEventListener('click', lbClose);
   document.getElementById('lb-close').addEventListener('click', lbClose);
@@ -951,9 +939,9 @@ if (!noMotion) {
   document.getElementById('lb-next').addEventListener('click', e=>{e.stopPropagation();lbGoto(1);});
   document.addEventListener('keydown', e=>{
     if(!lb.classList.contains('lb-on')) return;
-    if(e.key==='Escape')      lbClose();
-    if(e.key==='ArrowLeft')   lbGoto(-1);
-    if(e.key==='ArrowRight')  lbGoto(1);
+    if(e.key==='Escape')     lbClose();
+    if(e.key==='ArrowLeft')  lbGoto(-1);
+    if(e.key==='ArrowRight') lbGoto(1);
   });
 }
 
