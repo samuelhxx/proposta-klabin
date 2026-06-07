@@ -58,7 +58,7 @@ section{position:relative;overflow:hidden;}
 
 /* ── S1 HERO ── */
 #hero{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 80% 55% at 50% 0%,#1c003a 0%,var(--bg) 72%);}
-.hero-inner{padding:120px 40px 80px;max-width:880px;text-align:center;}
+.hero-inner{padding:120px 40px 80px;max-width:880px;text-align:center;position:relative;z-index:1;}
 #hlogo{width:280px;height:auto;object-fit:contain;margin:0 auto 44px;filter:brightness(1.1);opacity:0;}
 #hero-tag{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--sub);margin-bottom:30px;opacity:0;}
 #hero-title{font-family:var(--fd);font-size:clamp(2.8rem,7vw,6rem);font-weight:800;line-height:1.04;letter-spacing:-.025em;text-transform:uppercase;margin-bottom:26px;opacity:0;transform:translateY(14px);}
@@ -207,6 +207,56 @@ section{position:relative;overflow:hidden;}
   #hero-title{font-size:clamp(2.2rem,9vw,4rem);}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+
+/* ── FUNDO DINÂMICO ── */
+@keyframes bg-breathe{
+  0%,100%{opacity:.48;transform:scale(1);}
+  50%    {opacity:1;  transform:scale(1.22) translateY(-3%);}
+}
+@keyframes bg-breathe-b{
+  0%,100%{opacity:.5; transform:scale(1) translateX(0);}
+  50%    {opacity:1;  transform:scale(1.18) translateX(2%) translateY(-2%);}
+}
+@keyframes bg-drift{
+  0%   {opacity:.28;transform:translate(0,0) scale(1);}
+  34%  {opacity:.58;transform:translate(7%,-5%) scale(1.09);}
+  68%  {opacity:.34;transform:translate(-5%,7%) scale(.94);}
+  100% {opacity:.28;transform:translate(0,0) scale(1);}
+}
+
+/* Hero — pulso profundo e lento */
+#hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 58% 52% at 50% 28%,rgba(115,1,140,.24) 0%,rgba(26,0,48,.07) 58%,transparent 80%);
+  pointer-events:none;
+  animation:bg-breathe 15s ease-in-out infinite;
+  will-change:opacity,transform;
+}
+
+/* CTA — pulso mais lento e levemente deslocado */
+#cta::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 64% 60% at 50% 50%,rgba(115,1,140,.32) 0%,rgba(26,0,48,.1) 54%,transparent 80%);
+  pointer-events:none;
+  animation:bg-breathe-b 18s ease-in-out infinite;
+  will-change:opacity,transform;
+}
+
+/* Seções de conteúdo — brilho subliminar (~5% opacidade), quase imperceptível */
+#diag::before,#causa::before,#sol::before,#rest::before,#esc::before,#aut::before{
+  content:'';
+  position:absolute;
+  width:72%;height:72%;
+  background:radial-gradient(ellipse at center,rgba(115,1,140,.05) 0%,transparent 68%);
+  pointer-events:none;
+  animation:bg-drift 24s ease-in-out infinite;
+}
+#diag::before {top:2%;   left:14%; animation-delay:0s;}
+#causa::before{top:18%;  left:52%; animation-delay:-9s;}
+#sol::before  {top:8%;   left:18%; animation-delay:-5s;}
+#rest::before {top:12%;  left:46%; animation-delay:-16s;}
+#esc::before  {top:5%;   left:6%;  animation-delay:-3s;}
+#aut::before  {top:10%;  left:38%; animation-delay:-12s;}
 </style>
 </head>
 <body>
