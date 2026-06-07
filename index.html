@@ -879,19 +879,14 @@ if (!noMotion) {
   });
 }
 
-/* Refresh final — recalcula posições após tudo inicializado */
-ScrollTrigger.refresh();
-
-})();
 /* ── LIGHTBOX ── */
-(function(){
+{
   const photos = [
     { src:'1.jpeg', cap:'Vista geral — Cobertura Nave Principal' },
     { src:'2.jpeg', cap:'Detalhe — Trincas e juntas comprometidas' },
     { src:'3.jpeg', cap:'Drenagem — Pontos de acúmulo identificados' }
   ];
   let cur = 0, busy = false;
-
   const lb    = document.getElementById('lb');
   const lbBg  = document.getElementById('lb-bg');
   const lbImg = document.getElementById('lb-img');
@@ -900,7 +895,7 @@ ScrollTrigger.refresh();
 
   function setDot(i){ dots.forEach((d,j)=>d.classList.toggle('active',j===i)); }
 
-  function open(idx, originEl){
+  function lbOpen(idx, originEl){
     if(busy) return;
     cur = idx;
     lbImg.src = photos[cur].src;
@@ -909,62 +904,62 @@ ScrollTrigger.refresh();
     setDot(cur);
     lb.classList.add('lb-on');
     lenis.stop();
-    document.body.style.overflow='hidden';
-
     const r = originEl.getBoundingClientRect();
-    const scaleX = r.width  / window.innerWidth  * 1.8;
-    const scaleY = r.height / window.innerHeight * 1.8;
+    const sc = Math.min(r.width / window.innerWidth, r.height / window.innerHeight) * 1.6;
     const dx = r.left + r.width/2  - window.innerWidth/2;
     const dy = r.top  + r.height/2 - window.innerHeight/2;
-
-    gsap.set(lbImg,  {opacity:0, scale: Math.min(scaleX,scaleY,.45), x:dx, y:dy});
-    gsap.set(lbCap,  {opacity:0, y:16});
-    gsap.fromTo(lbBg, {opacity:0},{opacity:1, duration:.32, ease:'power2.out'});
-    gsap.to(lbImg, {opacity:1, scale:1, x:0, y:0, duration:.52, ease:'expo.out'});
-    gsap.to(lbCap, {opacity:1, y:0, duration:.35, delay:.22, ease:'power2.out'});
+    gsap.set(lbImg, {opacity:0, scale:Math.min(sc,.5), x:dx, y:dy});
+    gsap.set(lbCap, {opacity:0, y:16});
+    gsap.fromTo(lbBg, {opacity:0}, {opacity:1, duration:.30, ease:'power2.out'});
+    gsap.to(lbImg, {opacity:1, scale:1, x:0, y:0, duration:.50, ease:'expo.out'});
+    gsap.to(lbCap, {opacity:1, y:0, duration:.32, delay:.20, ease:'power2.out'});
   }
 
-  function close(){
+  function lbClose(){
     if(busy) return; busy=true;
-    gsap.to(lbBg,  {opacity:0, duration:.22, ease:'power2.in'});
-    gsap.to([lbImg,lbCap], {opacity:0, scale:.88, y:18, duration:.26, ease:'power2.in',
+    gsap.to(lbBg, {opacity:0, duration:.22, ease:'power2.in'});
+    gsap.to([lbImg,lbCap], {opacity:0, scale:.88, y:18, duration:.25, ease:'power2.in',
       onComplete(){
         lb.classList.remove('lb-on');
         lbImg.src='';
         gsap.set([lbImg,lbCap],{clearProps:'all'});
-        document.body.style.overflow='';
         lenis.start();
         busy=false;
       }
     });
   }
 
-  function goto(dir){
+  function lbGoto(dir){
     if(busy) return; busy=true;
     const nx = (cur + dir + photos.length) % photos.length;
-    gsap.to(lbImg, {opacity:0, x: dir*-55, duration:.18, ease:'power2.in', onComplete(){
+    gsap.to(lbImg, {opacity:0, x:dir*-50, duration:.17, ease:'power2.in', onComplete(){
       cur=nx;
       lbImg.src=photos[cur].src;
       lbImg.alt=photos[cur].cap;
       lbCap.textContent=photos[cur].cap;
       setDot(cur);
-      gsap.fromTo(lbImg,{opacity:0,x:dir*55},{opacity:1,x:0,duration:.28,ease:'power2.out',onComplete(){busy=false;}});
+      gsap.fromTo(lbImg,{opacity:0,x:dir*50},{opacity:1,x:0,duration:.26,ease:'power2.out',onComplete(){busy=false;}});
     }});
   }
 
   document.querySelectorAll('.photo-box').forEach((box,i)=>{
-    box.addEventListener('click',()=>open(i,box));
+    box.addEventListener('click', ()=>lbOpen(i,box));
   });
-  document.getElementById('lb-bg').addEventListener('click', close);
-  document.getElementById('lb-close').addEventListener('click', close);
-  document.getElementById('lb-prev').addEventListener('click', e=>{e.stopPropagation();goto(-1);});
-  document.getElementById('lb-next').addEventListener('click', e=>{e.stopPropagation();goto(1);});
+  document.getElementById('lb-bg').addEventListener('click', lbClose);
+  document.getElementById('lb-close').addEventListener('click', lbClose);
+  document.getElementById('lb-prev').addEventListener('click', e=>{e.stopPropagation();lbGoto(-1);});
+  document.getElementById('lb-next').addEventListener('click', e=>{e.stopPropagation();lbGoto(1);});
   document.addEventListener('keydown', e=>{
     if(!lb.classList.contains('lb-on')) return;
-    if(e.key==='Escape') close();
-    if(e.key==='ArrowLeft')  goto(-1);
-    if(e.key==='ArrowRight') goto(1);
+    if(e.key==='Escape')      lbClose();
+    if(e.key==='ArrowLeft')   lbGoto(-1);
+    if(e.key==='ArrowRight')  lbGoto(1);
   });
+}
+
+/* Refresh final — recalcula posições após tudo inicializado */
+ScrollTrigger.refresh();
+
 })();
 </script>
 
